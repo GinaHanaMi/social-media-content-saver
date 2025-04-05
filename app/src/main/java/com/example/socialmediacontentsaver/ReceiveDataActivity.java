@@ -18,7 +18,10 @@ public class ReceiveDataActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_receive_data);
 
-        TextView textView = (TextView)findViewById(R.id.receivingTxt);
+        TextView receivingTxtTextView = (TextView)findViewById(R.id.receivingTxt);
+        TextView receiveTitleTextView = (TextView)findViewById(R.id.receiveTitle);
+        TextView receivePlatformTextView = (TextView)findViewById(R.id.receivePlatform);
+        TextView receiveSaveDateTextView = (TextView)findViewById(R.id.receiveSaveDate);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -28,11 +31,11 @@ public class ReceiveDataActivity extends AppCompatActivity {
             if ("text/plain".equals(type)) {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 if (sharedText != null) {
-                    // Inside the sharedText block:
-                    textView.setText(sharedText);
+//                    // Inside the sharedText block:
+//                    receivingTxtTextView.setText(sharedText);
 
                     // Call the new fetcher method
-                    MetadataFetcher.fetchMetadata(sharedText, textView);
+                    MetadataFetcher.fetchMetadata(sharedText, receiveTitleTextView, receivePlatformTextView, receiveSaveDateTextView, receivingTxtTextView);
                 }
             }
         }

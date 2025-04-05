@@ -34,28 +34,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="TITLE" />
+                    android:text="Title: " />
 
                 <TextView
                     android:id="@+id/receivePlatform"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="PLATFORM" />
+                    android:text="Platform: " />
 
                 <TextView
                     android:id="@+id/receiveSaveDate"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="SAVEDATE" />
+                    android:text="Save date: " />
 
                 <TextView
                     android:id="@+id/receivingTxt"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="LINK" />
+                    android:text="Link: " />
 
                 <FrameLayout
                     android:id="@+id/foldersFrame"
@@ -116,93 +116,6 @@
 
                             </FrameLayout>
 
-                            <FrameLayout
-                                android:id="@+id/folderFrame"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:id="@+id/imageView3"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        tools:srcCompat="@tools:sample/avatars" />
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/folderTitle"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERTITLE" />
-
-                                        <TextView
-                                            android:id="@+id/folderDescription"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERDESCRIPTION" />
-
-                                        <TextView
-                                            android:id="@+id/folderCreateDate"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERCREATEDATE" />
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                            </FrameLayout>
-
-                            <FrameLayout
-                                android:id="@+id/folderFrame"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="horizontal">
-
-                                    <ImageView
-                                        android:id="@+id/imageView3"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        tools:srcCompat="@tools:sample/avatars" />
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/folderTitle"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERTITLE" />
-
-                                        <TextView
-                                            android:id="@+id/folderDescription"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERDESCRIPTION" />
-
-                                        <TextView
-                                            android:id="@+id/folderCreateDate"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:text="FOLDERCREATEDATE" />
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                            </FrameLayout>
                         </LinearLayout>
                     </ScrollView>
                 </FrameLayout>
