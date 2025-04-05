@@ -2,6 +2,7 @@ package com.example.socialmediacontentsaver;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +23,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
         TextView receiveTitleTextView = (TextView)findViewById(R.id.receiveTitle);
         TextView receivePlatformTextView = (TextView)findViewById(R.id.receivePlatform);
         TextView receiveSaveDateTextView = (TextView)findViewById(R.id.receiveSaveDate);
+        ImageView receiveThumbnailImageView = (ImageView)findViewById(R.id.receiveThumbnail);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -35,7 +37,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
 //                    receivingTxtTextView.setText(sharedText);
 
                     // Call the new fetcher method
-                    MetadataFetcher.fetchMetadata(sharedText, receiveTitleTextView, receivePlatformTextView, receiveSaveDateTextView, receivingTxtTextView);
+                    MetadataFetcher.fetchMetadata(this ,sharedText, receiveTitleTextView, receivePlatformTextView, receiveSaveDateTextView, receivingTxtTextView, receiveThumbnailImageView);
                 }
             }
         }
