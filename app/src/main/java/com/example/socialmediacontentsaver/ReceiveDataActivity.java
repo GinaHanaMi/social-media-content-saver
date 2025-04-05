@@ -28,7 +28,11 @@ public class ReceiveDataActivity extends AppCompatActivity {
             if ("text/plain".equals(type)) {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 if (sharedText != null) {
+                    // Inside the sharedText block:
                     textView.setText(sharedText);
+
+                    // Call the new fetcher method
+                    MetadataFetcher.fetchMetadata(sharedText, textView);
                 }
             }
         }

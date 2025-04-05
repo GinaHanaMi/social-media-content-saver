@@ -13,11 +13,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_1 = "id";
     public static final String COL_2 = "thumbnail";
     public static final String COL_3 = "title";
-    public static final String COL_4 = "duration";
-    public static final String COL_5 = "platform";
-    public static final String COL_6 = "creator";
-    public static final String COL_7 = "save_date";
-    public static final String COL_8 = "link";
+    public static final String COL_4 = "platform";
+    public static final String COL_5 = "save_date";
+    public static final String COL_6 = "link";
 
 
 
@@ -34,6 +32,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+        onCreate(db);
     }
+
+    public void insertData() {
+        
+    };
+
 }
