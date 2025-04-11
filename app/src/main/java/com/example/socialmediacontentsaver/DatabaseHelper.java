@@ -19,8 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_6 = "link";
 
 
-
-
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
 
@@ -41,6 +39,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-    };
+    }
 
 }

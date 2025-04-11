@@ -70,7 +70,7 @@ public class MetadataFetcher {
                 Document doc = Jsoup.connect(sharedText).get();
 
                 // yt image thumbnail, site_name platform, title title,
-                // thumb, title, platf, savedate link
+                // thumb, title, platform, save_date link
                 //twitter, yt, instagram, tiktok, pinterest // fb, linkedin, reddit
 
                 String title = doc.select("meta[property=og:title]").attr("content");
@@ -107,7 +107,7 @@ public class MetadataFetcher {
             String finalResultImageUrl = resultImageUrl;
             String savedPath = MetadataFetcher.downloadAndSaveImage(context, finalResultImageUrl);
 
-            String pattern = "dd/MM/yyyy HH:mm:ss";
+            String pattern = "dd/MM/yyyy";
             @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
             Date currentTime = Calendar.getInstance().getTime();
             String currentTimeStringify = df.format(currentTime);
@@ -115,10 +115,10 @@ public class MetadataFetcher {
 
             handler.post(() -> {
                 // Update UI on the main thread
-                receiveTitleTextView.append(finalResultTitle);
-                receivePlatformTextView.append(finalResultPlatform);
-                receiveSaveDateTextView.append(currentTimeStringify);
-                receivingTxtTextView.append(sharedText);
+                receiveTitleTextView.append("Title: " + finalResultTitle);
+                receivePlatformTextView.append("Platform: " + finalResultPlatform);
+                receiveSaveDateTextView.append("Save date: " + currentTimeStringify);
+                receivingTxtTextView.append("Link: " + sharedText);
                 receiveThumbnailImageView.setImageBitmap(BitmapFactory.decodeFile(savedPath));
             });
         });
