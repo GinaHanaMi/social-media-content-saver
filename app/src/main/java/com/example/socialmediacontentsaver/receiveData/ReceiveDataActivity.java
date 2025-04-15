@@ -1,4 +1,4 @@
-package com.example.socialmediacontentsaver;
+package com.example.socialmediacontentsaver.receiveData;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
+
+import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
+import com.example.socialmediacontentsaver.R;
 
 public class ReceiveDataActivity extends AppCompatActivity {
     ContentDatabaseHelper myDb;

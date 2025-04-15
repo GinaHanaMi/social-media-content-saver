@@ -1,4 +1,4 @@
-package com.example.socialmediacontentsaver;
+package com.example.socialmediacontentsaver.receiveData;
 
 import android.os.Handler;
 import android.os.Looper;
