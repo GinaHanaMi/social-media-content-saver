@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,thumbnail TEXT,title TEXT,duration INTEGER,platform TEXT,creator TEXT, save_date TEXT, link TEXT)");
+        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,thumbnail TEXT,title TEXT, platform TEXT, save_date TEXT, link TEXT)");
     }
 
     @Override
@@ -35,10 +35,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertData() {
+    public boolean insertData(String thumbnail, String title, String platform, String save_date, String link) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
+        contentValues.put(COL_2, thumbnail);
+        contentValues.put(COL_3, title);
+        contentValues.put(COL_4, platform);
+        contentValues.put(COL_5, save_date);
+        contentValues.put(COL_6, link);
+        long result = db.insert(TABLE_NAME, null, contentValues);
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

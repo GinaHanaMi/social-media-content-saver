@@ -19,6 +19,14 @@
             android:scaleType="centerInside"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+        <TextView
+            android:id="@+id/receiveThumbnailPath"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            tools:visibility="invisible"
+            android:text=""
+            />
+
         <FrameLayout
             android:id="@+id/dataFrame"
             android:layout_width="match_parent"
@@ -33,25 +41,32 @@
                     android:id="@+id/receiveTitle"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <TextView
                     android:id="@+id/receivePlatform"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <TextView
                     android:id="@+id/receiveSaveDate"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <TextView
                     android:id="@+id/receivingTxt"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
+
+                <Button
+                    android:id="@+id/saveContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Save" />
 
                 <FrameLayout
                     android:id="@+id/foldersFrame"

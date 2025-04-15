@@ -57,7 +57,7 @@ public class MetadataFetcher {
         }
     }
 
-    public static void fetchMetadata(Context context, String sharedText, TextView receiveTitleTextView, TextView receivePlatformTextView, TextView receiveSaveDateTextView, TextView receivingTxtTextView, ImageView receiveThumbnailImageView) {
+    public static void fetchMetadata(Context context, String sharedText, TextView receiveTitleTextView, TextView receivePlatformTextView, TextView receiveSaveDateTextView, TextView receivingTxtTextView, ImageView receiveThumbnailImageView, TextView receiveThumbnailPathTextView) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -105,6 +105,7 @@ public class MetadataFetcher {
             String finalResultTitle = resultTitle;
             String finalResultPlatform = resultPlatform;
             String finalResultImageUrl = resultImageUrl;
+
             String savedPath = MetadataFetcher.downloadAndSaveImage(context, finalResultImageUrl);
 
             String pattern = "dd/MM/yyyy";
@@ -115,11 +116,12 @@ public class MetadataFetcher {
 
             handler.post(() -> {
                 // Update UI on the main thread
-                receiveTitleTextView.append("Title: " + finalResultTitle);
-                receivePlatformTextView.append("Platform: " + finalResultPlatform);
-                receiveSaveDateTextView.append("Save date: " + currentTimeStringify);
-                receivingTxtTextView.append("Link: " + sharedText);
+                receiveTitleTextView.setText(finalResultTitle);
+                receivePlatformTextView.setText(finalResultPlatform);
+                receiveSaveDateTextView.setText(currentTimeStringify);
+                receivingTxtTextView.setText(sharedText);
                 receiveThumbnailImageView.setImageBitmap(BitmapFactory.decodeFile(savedPath));
+                receiveThumbnailPathTextView.setText(savedPath);
             });
         });
     }
