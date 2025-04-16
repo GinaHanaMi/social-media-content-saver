@@ -1,56 +1,50 @@
 package com.example.socialmediacontentsaver.databaseHelpers;
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
+public class ContentDatabaseHelper {
+    private SQLiteDatabase db;
 
-public class ContentDatabaseHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "savedContent.db";
-    public static final String TABLE_NAME = "saved_content_table";
-
-    public static final String COL_1 = "id";
-    public static final String COL_2 = "thumbnail";
-    public static final String COL_3 = "title";
-    public static final String COL_4 = "description";
-    public static final String COL_5 = "platform";
-    public static final String COL_6 = "save_date";
-    public static final String COL_7 = "link";
-
-
-    public ContentDatabaseHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 1);
-
+    public ContentDatabaseHelper(SQLiteDatabase db) {
+        this.db = db;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,thumbnail TEXT,title TEXT, description TEXT, platform TEXT, save_date TEXT, link TEXT)");
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
-        onCreate(db);
-    }
-
-    public boolean insertData(String thumbnail, String title, String description, String platform, String save_date, String link) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public boolean insertContent(String thumbnail, String title, String description, String platform, String saveDate, String link) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, thumbnail);
-        contentValues.put(COL_3, title);
-        contentValues.put(COL_4, description);
-        contentValues.put(COL_5, platform);
-        contentValues.put(COL_6, save_date);
-        contentValues.put(COL_7, link);
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
+        contentValues.put("thumbnail", thumbnail);
+        contentValues.put("title", title);
+        contentValues.put("description", description);
+        contentValues.put("platform", platform);
+        contentValues.put("save_date", saveDate);
+        contentValues.put("link", link);
+        long result = db.insert(AppDatabaseHelper.CONTENT_TABLE, null, contentValues);
+        return result != -1;
     }
 
+    public Cursor getAllContent() {
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.CONTENT_TABLE, null);
+    }
+
+    public Cursor getContentById(int id) {
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.CONTENT_TABLE + " WHERE ID = ?", new String[]{String.valueOf(id)});
+    }
+
+    public boolean updateContent(int id, String thumbnail, String title, String description, String platform, String saveDate, String link) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("thumbnail", thumbnail);
+        contentValues.put("title", title);
+        contentValues.put("description", description);
+        contentValues.put("platform", platform);
+        contentValues.put("save_date", saveDate);
+        contentValues.put("link", link);
+        int result = db.update(AppDatabaseHelper.CONTENT_TABLE, contentValues, "ID = ?", new String[]{String.valueOf(id)});
+        return result > 0;
+    }
+
+    public boolean deleteContent(int id) {
+        int result = db.delete(AppDatabaseHelper.CONTENT_TABLE, "ID = ?", new String[]{String.valueOf(id)});
+        return result > 0;
+    }
 }

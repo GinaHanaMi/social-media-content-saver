@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 public class FolderDatabaseHelper {
     private SQLiteDatabase db;
 
-    public static final String FOLDERS_TABLE = "folders_table";
-
     public FolderDatabaseHelper(SQLiteDatabase db) {
         this.db = db;
     }
@@ -19,12 +17,16 @@ public class FolderDatabaseHelper {
         contentValues.put("title", title);
         contentValues.put("description", description);
         contentValues.put("created_at", createdAt);
-        long result = db.insert(FOLDERS_TABLE, null, contentValues);
+        long result = db.insert(AppDatabaseHelper.FOLDERS_TABLE, null, contentValues);
         return result != -1;
     }
 
     public Cursor getAllFolders() {
-        return db.rawQuery("SELECT * FROM " + FOLDERS_TABLE, null);
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.FOLDERS_TABLE, null);
+    }
+
+    public Cursor getFolderById(int id) {
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.FOLDERS_TABLE + " WHERE id = ?", new String[]{String.valueOf(id)});
     }
 
     public boolean updateFolder(int id, String thumbnail, String title, String description, String createdAt) {
@@ -33,12 +35,12 @@ public class FolderDatabaseHelper {
         contentValues.put("title", title);
         contentValues.put("description", description);
         contentValues.put("created_at", createdAt);
-        int result = db.update(FOLDERS_TABLE, contentValues, "id = ?", new String[]{String.valueOf(id)});
+        int result = db.update(AppDatabaseHelper.FOLDERS_TABLE, contentValues, "id = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
 
     public boolean deleteFolder(int id) {
-        int result = db.delete(FOLDERS_TABLE, "id = ?", new String[]{String.valueOf(id)});
+        int result = db.delete(AppDatabaseHelper.FOLDERS_TABLE, "id = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
 }
