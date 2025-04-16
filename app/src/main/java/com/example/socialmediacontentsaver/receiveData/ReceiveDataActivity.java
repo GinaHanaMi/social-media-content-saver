@@ -173,14 +173,10 @@ public class ReceiveDataActivity extends AppCompatActivity {
                     @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
                     Date currentTime = Calendar.getInstance().getTime();
                     String currentTimeStringify = df.format(currentTime);
-
-                    String thumbnailToSave = selectedFolderThumbnailPath != null ? selectedFolderThumbnailPath : "none";
+                    String thumbnailToSave = selectedFolderThumbnailPath != null ? selectedFolderThumbnailPath : thumbnail_path;
 
                     folderDatabase.insertFolder(thumbnailToSave, folderTitle, folderDescription, currentTimeStringify);
 
-                    Toast.makeText(ReceiveDataActivity.this,
-                            "Folder saved:\n" + folderTitle + "\n" + folderDescription,
-                            Toast.LENGTH_LONG).show();
                 } else {
                     folderTitleEditText.setError("Title cannot be empty!");
                     return;
