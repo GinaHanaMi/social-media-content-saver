@@ -1,33 +1,36 @@
 package com.example.socialmediacontentsaver.receiveData;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import android.annotation.SuppressLint;
-import android.graphics.BitmapFactory;
-
+import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
-import com.example.socialmediacontentsaver.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ReceiveDataActivity extends AppCompatActivity {
     ContentDatabaseHelper contentDatabase;
@@ -40,6 +43,11 @@ public class ReceiveDataActivity extends AppCompatActivity {
     String thumbnail_path = "";
     String platform = "";
 
+    // New fields for image selection
+    private ActivityResultLauncher<Intent> folderImagePickerLauncher;
+    private ImageButton currentFolderThumbnailButton;
+    private String selectedFolderThumbnailPath = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +58,9 @@ public class ReceiveDataActivity extends AppCompatActivity {
         AppDatabaseHelper appDatabaseHelper = new AppDatabaseHelper(this);
         SQLiteDatabase db = appDatabaseHelper.getWritableDatabase();
 
-        // Initialize ContentDatabaseHelper with SQLiteDatabase
+        // Initialize ContentDatabaseHelper and FolderDatabaseHelper
         contentDatabase = new ContentDatabaseHelper(db);
-        folderDatabase = new FolderDatabaseHelper(db);     /////////////////////////////////////////////
+        folderDatabase = new FolderDatabaseHelper(db);
 
         receiveTitleEditText = findViewById(R.id.receiveTitle);
         receiveDescriptionEditText = findViewById(R.id.receiveDescription);
@@ -84,6 +92,9 @@ public class ReceiveDataActivity extends AppCompatActivity {
             }
         }
 
+        // Initialize image picker launcher
+        initFolderImagePickerLauncher();
+
         AddData();
         setupAddNewFolderDialog();
 
@@ -92,6 +103,22 @@ public class ReceiveDataActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private void initFolderImagePickerLauncher() {
+        folderImagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        Uri imageUri = data.getData();
+                        if (imageUri != null && currentFolderThumbnailButton != null) {
+                            currentFolderThumbnailButton.setImageURI(imageUri);
+                            selectedFolderThumbnailPath = imageUri.toString();
+                        }
+                    }
+                }
+        );
     }
 
     public void AddData() {
@@ -104,7 +131,6 @@ public class ReceiveDataActivity extends AppCompatActivity {
                         Date currentTime = Calendar.getInstance().getTime();
                         String currentTimeStringify = df.format(currentTime);
 
-                        // Use insertContent() instead of insertData()
                         boolean isInserted = contentDatabase.insertContent(
                                 thumbnail_path,
                                 receiveTitleEditText.getText().toString(),
@@ -132,37 +158,43 @@ public class ReceiveDataActivity extends AppCompatActivity {
             Button saveFolderButton = dialogView.findViewById(R.id.dialogSaveFolder);
             ImageButton folderThumbnailButton = dialogView.findViewById(R.id.imageButton);
 
-            // Create dialog
             AlertDialog dialog = new AlertDialog.Builder(ReceiveDataActivity.this)
                     .setView(dialogView)
                     .create();
 
             dialog.show();
 
-            // Save button logic
             saveFolderButton.setOnClickListener(view -> {
                 String folderTitle = folderTitleEditText.getText().toString();
                 String folderDescription = folderDescriptionEditText.getText().toString();
 
                 if (!folderTitle.isEmpty()) {
+                    String pattern = "dd/MM/yyyy";
+                    @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String currentTimeStringify = df.format(currentTime);
+
+                    String thumbnailToSave = selectedFolderThumbnailPath != null ? selectedFolderThumbnailPath : "none";
+
+                    folderDatabase.insertFolder(thumbnailToSave, folderTitle, folderDescription, currentTimeStringify);
+
                     Toast.makeText(ReceiveDataActivity.this,
                             "Folder saved:\n" + folderTitle + "\n" + folderDescription,
                             Toast.LENGTH_LONG).show();
                 } else {
                     folderTitleEditText.setError("Title cannot be empty!");
+                    return;
                 }
-
-                String pattern = "dd/MM/yyyy";
-                @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
-                Date currentTime = Calendar.getInstance().getTime();
-                String currentTimeStringify = df.format(currentTime);
-
-                folderDatabase.insertFolder("test", folderTitle, folderDescription, currentTimeStringify);
 
                 dialog.dismiss();
             });
 
+            folderThumbnailButton.setOnClickListener(view -> {
+                currentFolderThumbnailButton = folderThumbnailButton;
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                folderImagePickerLauncher.launch(intent);
+            });
         });
     }
-
 }
