@@ -55,11 +55,12 @@
 
                     />
 
-                <FrameLayout
+                <LinearLayout
                     android:id="@+id/foldersFrame"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="6">
+                    android:layout_weight="6"
+                    android:orientation="vertical">
 
                     <FrameLayout
                         android:id="@+id/folderOptions"
@@ -90,10 +91,9 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/foldersRecyclerViewReceiveData"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
+                        android:layout_height="match_parent" />
 
-                </FrameLayout>
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/saveContent"

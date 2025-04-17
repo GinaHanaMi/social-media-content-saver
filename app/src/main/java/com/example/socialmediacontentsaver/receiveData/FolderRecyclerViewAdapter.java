@@ -13,6 +13,7 @@ import com.example.socialmediacontentsaver.models.FolderModel;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import com.bumptech.glide.Glide;
 
@@ -43,7 +44,9 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
         // Load image using Glide
         Glide.with(context)
-                .load(folderModel.getThumbnail())
+                .load(new File(folderModel.getThumbnail()))
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground)
                 .into(holder.thumbnailRecycleViewTextViewVar);
 
         holder.titleRecyclerTextViewVar.setText(folderModel.getTitle());
