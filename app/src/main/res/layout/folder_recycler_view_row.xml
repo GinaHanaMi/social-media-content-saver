@@ -30,6 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
+                app:layout_goneMarginRight="10dp"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <TextView
@@ -59,6 +60,17 @@
                 android:text="CREATE AT"
                 app:layout_constraintLeft_toRightOf="@id/thumbnailRecycleViewTextView"
                 app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <CheckBox
+                android:id="@+id/selectFolderRecycleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/thumbnailRecycleViewTextView"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

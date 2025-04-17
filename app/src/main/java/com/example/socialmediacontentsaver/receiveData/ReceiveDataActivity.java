@@ -192,7 +192,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
                     folderTitleEditText.setError("Title cannot be empty!");
                     return;
                 }
-
+                PopulateLayoutWithFolders();
                 dialog.dismiss();
             });
 
@@ -209,6 +209,10 @@ public class ReceiveDataActivity extends AppCompatActivity {
         Cursor res = folderDatabase.getAllFolders();
 
         RecyclerView recyclerView = findViewById(R.id.foldersRecyclerViewReceiveData);
+
+        // w momencie gdy dodaję folder nowy, a istnieją poprzednie, to przez logike
+        // sa one dodawane ponownie, gdzie nie ma potrzeby
+        // więc pierw do, by sprawdzic czy juz przypadkiem nie istniej
 
         while (res.moveToNext()) {
             folderModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));

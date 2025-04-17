@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,6 +69,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
         ImageView thumbnailRecycleViewTextViewVar;
         TextView titleRecyclerTextViewVar, descriptionRecyclerTextViewVar, createAtRecyclerTextViewVar;
+        CheckBox selectFolderRecycleViewVar;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -77,6 +79,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
             titleRecyclerTextViewVar = itemView.findViewById(R.id.titleRecyclerTextView);
             descriptionRecyclerTextViewVar = itemView.findViewById(R.id.descriptionRecyclerTextView);
             createAtRecyclerTextViewVar = itemView.findViewById(R.id.createAtRecyclerTextView);
+            selectFolderRecycleViewVar = itemView.findViewById(R.id.selectFolderRecycleView);
 
         }
     }
