@@ -1,6 +1,7 @@
 package com.example.socialmediacontentsaver.receiveData;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
         // Load image using Glide
         Glide.with(context)
-                .load(new File(folderModel.getThumbnail()))
+                .load(Uri.parse(folderModel.getThumbnail()))
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.thumbnailRecycleViewTextViewVar);

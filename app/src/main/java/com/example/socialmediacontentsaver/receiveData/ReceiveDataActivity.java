@@ -89,7 +89,9 @@ public class ReceiveDataActivity extends AppCompatActivity {
                             receiveTitleEditText.setText(title);
                             receiveDescriptionEditText.setText(description);
                             if (savedPath != null) {
-                                receiveThumbnailImageView.setImageBitmap(BitmapFactory.decodeFile(savedPath));
+                                Uri imageUri = Uri.fromFile(new java.io.File(savedPath));
+                                receiveThumbnailImageView.setImageURI(imageUri);
+                                thumbnail_path = imageUri.toString();
                             }
                             thumbnail_path = savedPath;
                             platform = fetchedPlatform;
