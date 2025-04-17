@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
@@ -204,8 +206,16 @@ public class ReceiveDataActivity extends AppCompatActivity {
     public void PopulateLayoutWithFolders () {
         Cursor res = folderDatabase.getAllFolders();
 
+        RecyclerView recyclerView = findViewById(R.id.foldersRecyclerViewReceiveData);
+
         while (res.moveToNext()) {
             folderModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));
         }
+
+        FolderRecyclerViewAdapter adapter = new FolderRecyclerViewAdapter(this, folderModels);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 }
