@@ -1,4 +1,4 @@
-package com.example.socialmediacontentsaver;
+package com.example.socialmediacontentsaver.models;
 
 public class ContentModel {
     String id;

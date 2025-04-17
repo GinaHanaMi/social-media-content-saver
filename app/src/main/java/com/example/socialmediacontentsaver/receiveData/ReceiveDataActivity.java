@@ -2,6 +2,7 @@ package com.example.socialmediacontentsaver.receiveData;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -26,9 +27,11 @@ import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
+import com.example.socialmediacontentsaver.models.FolderModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,6 +50,8 @@ public class ReceiveDataActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> folderImagePickerLauncher;
     private ImageButton currentFolderThumbnailButton;
     private String selectedFolderThumbnailPath = null;
+
+    ArrayList<FolderModel> folderModels = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,8 @@ public class ReceiveDataActivity extends AppCompatActivity {
                             }
                             thumbnail_path = savedPath;
                             platform = fetchedPlatform;
+
+                            PopulateLayoutWithFolders();
                         }
                     });
                 }
@@ -192,5 +199,13 @@ public class ReceiveDataActivity extends AppCompatActivity {
                 folderImagePickerLauncher.launch(intent);
             });
         });
+    }
+
+    public void PopulateLayoutWithFolders () {
+        Cursor res = folderDatabase.getAllFolders();
+
+        while (res.moveToNext()) {
+            folderModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));
+        }
     }
 }
