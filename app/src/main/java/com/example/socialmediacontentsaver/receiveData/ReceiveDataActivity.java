@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +41,7 @@ import java.util.Date;
 public class ReceiveDataActivity extends AppCompatActivity {
     ContentDatabaseHelper contentDatabase;
     FolderDatabaseHelper folderDatabase;
-    FolderContentAssociationHelper contentFolderAssociationDatabase;
+    FolderContentAssociationHelper folderContentAssociationDatabase;
     EditText receiveTitleEditText, receiveDescriptionEditText;
     ImageView receiveThumbnailImageView;
     Button saveContentButton, addNewFolderButton;
@@ -61,6 +61,9 @@ public class ReceiveDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("DEBUG", "onCreate called");
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_receive_data);
 
@@ -71,6 +74,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
         // Initialize ContentDatabaseHelper and FolderDatabaseHelper
         contentDatabase = new ContentDatabaseHelper(db);
         folderDatabase = new FolderDatabaseHelper(db);
+        folderContentAssociationDatabase = new FolderContentAssociationHelper(db);
 
         receiveTitleEditText = findViewById(R.id.receiveTitle);
         receiveDescriptionEditText = findViewById(R.id.receiveDescription);
@@ -92,6 +96,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
                         public void onMetadataFetched(String title, String description, String savedPath, String fetchedPlatform) {
                             receiveTitleEditText.setText(title);
                             receiveDescriptionEditText.setText(description);
+                            Log.d("DEBUG", "onMetadataFetched called");
                             if (savedPath != null) {
                                 Uri imageUri = Uri.fromFile(new java.io.File(savedPath));
                                 receiveThumbnailImageView.setImageURI(imageUri);
@@ -137,37 +142,44 @@ public class ReceiveDataActivity extends AppCompatActivity {
     }
 
     public void AddData() {
-        saveContentButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String pattern = "dd/MM/yyyy";
-                        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
-                        Date currentTime = Calendar.getInstance().getTime();
-                        String currentTimeStringify = df.format(currentTime);
+        saveContentButton.setOnClickListener(new View.OnClickListener() {
+            boolean isSaving = false;
 
-                        boolean isContentInserted = contentDatabase.insertContent(
-                                thumbnail_path,
-                                receiveTitleEditText.getText().toString(),
-                                receiveDescriptionEditText.getText().toString(),
-                                platform,
-                                currentTimeStringify,
-                                sharedText
-                        );
-
-                        if (isContentInserted) {
-                            ArrayList<FolderModel> selectedFolders = adapter.getSelectedFolders();
-
-                            for (FolderModel i : selectedFolders) {
-//                                boolean isContentToFolderInserted = contentFolderAssociationDatabase.addContentToFolder(Integer.parseInt(i.getId()), );
-
-                                Toast.makeText(ReceiveDataActivity.this, i.getId(), Toast.LENGTH_LONG).show();
-                            };
-//                            finishAffinity();
-                        }
-                    }
+            @Override
+            public void onClick(View v) {
+                if (isSaving) {
+                    return;
                 }
-        );
+                isSaving = true;
+
+                String pattern = "dd/MM/yyyy";
+                @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
+                Date currentTime = Calendar.getInstance().getTime();
+                String currentTimeStringify = df.format(currentTime);
+
+                long contentId = contentDatabase.insertContent(
+                        thumbnail_path,
+                        receiveTitleEditText.getText().toString(),
+                        receiveDescriptionEditText.getText().toString(),
+                        platform,
+                        currentTimeStringify,
+                        sharedText
+                );
+
+                if (contentId > 0) {
+                    ArrayList<FolderModel> selectedFolders = adapter.getSelectedFolders();
+
+                    for (FolderModel folder : selectedFolders) {
+                        long associationId = folderContentAssociationDatabase.addContentToFolder(
+                                Integer.parseInt(folder.getId()),
+                                (int) contentId
+                        );
+                    }
+                    finishAffinity();
+                }
+                isSaving = false;
+            }
+        });
     }
 
     public void setupAddNewFolderDialog() {
@@ -216,13 +228,10 @@ public class ReceiveDataActivity extends AppCompatActivity {
     }
 
     public void PopulateLayoutWithFolders () {
+        folderModels.clear();
         Cursor res = folderDatabase.getAllFolders();
 
         RecyclerView recyclerView = findViewById(R.id.foldersRecyclerViewReceiveData);
-
-        // w momencie gdy dodaję folder nowy, a istnieją poprzednie, to przez logike
-        // sa one dodawane ponownie, gdzie nie ma potrzeby
-        // więc pierw do, by sprawdzic czy juz przypadkiem nie istniej
 
         while (res.moveToNext()) {
             folderModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));

@@ -11,7 +11,7 @@ public class ContentDatabaseHelper {
         this.db = db;
     }
 
-    public boolean insertContent(String thumbnail, String title, String description, String platform, String saveDate, String link) {
+    public long insertContent(String thumbnail, String title, String description, String platform, String saveDate, String link) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("thumbnail", thumbnail);
         contentValues.put("title", title);
@@ -19,8 +19,7 @@ public class ContentDatabaseHelper {
         contentValues.put("platform", platform);
         contentValues.put("save_date", saveDate);
         contentValues.put("link", link);
-        long result = db.insert(AppDatabaseHelper.CONTENT_TABLE, null, contentValues);
-        return result != -1;
+        return db.insert(AppDatabaseHelper.CONTENT_TABLE, null, contentValues);
     }
 
     public Cursor getAllContent() {

@@ -11,12 +11,11 @@ public class FolderContentAssociationHelper {
         this.db = db;
     }
 
-    public boolean addContentToFolder(int folderId, int contentId) {
+    public long addContentToFolder(int folderId, int contentId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("folder_id", folderId);
         contentValues.put("content_id", contentId);
-        long result = db.insert(AppDatabaseHelper.FOLDER_CONTENT_TABLE, null, contentValues);
-        return result != -1;
+        return db.insert(AppDatabaseHelper.FOLDER_CONTENT_TABLE, null, contentValues);
     }
 
     public boolean removeContentFromFolder(int folderId, int contentId) {
