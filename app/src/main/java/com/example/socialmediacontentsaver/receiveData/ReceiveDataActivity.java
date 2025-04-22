@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
+import com.example.socialmediacontentsaver.databaseHelpers.FolderContentAssociationHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
 import com.example.socialmediacontentsaver.models.FolderModel;
 
@@ -40,9 +41,11 @@ import java.util.Date;
 public class ReceiveDataActivity extends AppCompatActivity {
     ContentDatabaseHelper contentDatabase;
     FolderDatabaseHelper folderDatabase;
+    FolderContentAssociationHelper contentFolderAssociationDatabase;
     EditText receiveTitleEditText, receiveDescriptionEditText;
     ImageView receiveThumbnailImageView;
     Button saveContentButton, addNewFolderButton;
+    FolderRecyclerViewAdapter adapter;
 
     String sharedText = "";
     String thumbnail_path = "";
@@ -74,6 +77,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
         receiveThumbnailImageView = findViewById(R.id.receiveThumbnail);
         saveContentButton = findViewById(R.id.saveContent);
         addNewFolderButton = findViewById(R.id.addNewFolder);
+
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -142,7 +146,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
                         Date currentTime = Calendar.getInstance().getTime();
                         String currentTimeStringify = df.format(currentTime);
 
-                        boolean isInserted = contentDatabase.insertContent(
+                        boolean isContentInserted = contentDatabase.insertContent(
                                 thumbnail_path,
                                 receiveTitleEditText.getText().toString(),
                                 receiveDescriptionEditText.getText().toString(),
@@ -151,9 +155,15 @@ public class ReceiveDataActivity extends AppCompatActivity {
                                 sharedText
                         );
 
-                        if (isInserted) {
-                            Toast.makeText(ReceiveDataActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
-                            finishAffinity();
+                        if (isContentInserted) {
+                            ArrayList<FolderModel> selectedFolders = adapter.getSelectedFolders();
+
+                            for (FolderModel i : selectedFolders) {
+//                                boolean isContentToFolderInserted = contentFolderAssociationDatabase.addContentToFolder(Integer.parseInt(i.getId()), );
+
+                                Toast.makeText(ReceiveDataActivity.this, i.getId(), Toast.LENGTH_LONG).show();
+                            };
+//                            finishAffinity();
                         }
                     }
                 }
@@ -218,7 +228,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
             folderModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));
         }
 
-        FolderRecyclerViewAdapter adapter = new FolderRecyclerViewAdapter(this, folderModels);
+        adapter = new FolderRecyclerViewAdapter(this, folderModels);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

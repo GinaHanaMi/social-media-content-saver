@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.bumptech.glide.Glide;
 
 public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.MyViewHolder> {
     Context context;
     ArrayList<FolderModel> folderModels;
+    HashMap<String, Boolean> selectedItems = new HashMap<>();
 
     public FolderRecyclerViewAdapter(Context context, ArrayList<FolderModel> folderModels) {
         this.context = context;
@@ -44,6 +47,8 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         // Assign values based on position of the RecyclerView
         FolderModel folderModel = folderModels.get(position);
 
+
+
         // Load image using Glide
         Glide.with(context)
                 .load(Uri.parse(folderModel.getThumbnail()))
@@ -54,6 +59,22 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         holder.titleRecyclerTextViewVar.setText(folderModel.getTitle());
         holder.descriptionRecyclerTextViewVar.setText(folderModel.getDescription());
         holder.createAtRecyclerTextViewVar.setText(folderModel.getCreated_at());
+
+        // Get ID
+        String folderId = folderModel.getId();
+
+        // Bind checkbox state safely
+        holder.selectFolderRecycleViewVar.setOnCheckedChangeListener(null); // avoid recycled listeners
+        holder.selectFolderRecycleViewVar.setChecked(selectedItems.containsKey(folderId) && selectedItems.get(folderId));
+
+        // Set listener to update selection map
+        holder.selectFolderRecycleViewVar.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                selectedItems.put(folderId, true);
+            } else {
+                selectedItems.remove(folderId);
+            }
+        });
     }
 
     @Override
@@ -61,6 +82,17 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         // the recycler view just wants to know the number of items that are beeing displayed
         return folderModels.size();
     }
+
+    public ArrayList<FolderModel> getSelectedFolders() {
+        ArrayList<FolderModel> selectedFolders = new ArrayList<>();
+        for (FolderModel folder : folderModels) {
+            if (selectedItems.containsKey(folder.getId())) {
+                selectedFolders.add(folder);
+            }
+        }
+        return selectedFolders;
+    }
+
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
