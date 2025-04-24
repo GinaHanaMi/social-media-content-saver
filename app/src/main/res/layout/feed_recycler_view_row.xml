@@ -57,13 +57,14 @@
                 android:layout_height="wrap_content"
                 android:text="CREATE AT"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewTextView" />
+                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewTextView"
+                />
 
             <TextView
                 android:id="@+id/feedPlatformRecyclerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CREATE AT"
+                android:text="PLATFORM"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/feedSaveDateRecyclerTextView" />
 

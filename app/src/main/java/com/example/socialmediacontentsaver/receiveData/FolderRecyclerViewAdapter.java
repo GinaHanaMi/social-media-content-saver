@@ -15,7 +15,6 @@ import com.example.socialmediacontentsaver.models.FolderModel;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
