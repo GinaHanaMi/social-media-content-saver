@@ -180,6 +180,7 @@ public class ReceiveDataActivity extends AppCompatActivity {
 
     public void setupAddNewFolderDialog() {
         addNewFolderButton.setOnClickListener(v -> {
+            selectedFolderThumbnailPath = null;
             View dialogView = getLayoutInflater().inflate(R.layout.add_folder_dialog, null);
 
             EditText folderTitleEditText = dialogView.findViewById(R.id.dialogFolderTitle);

@@ -27,28 +27,34 @@ public class fragmentOne extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_one, container, false);
 
-        com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper appDatabaseHelper = new AppDatabaseHelper(this);
+        AppDatabaseHelper appDatabaseHelper = new AppDatabaseHelper(requireContext());
         SQLiteDatabase db = appDatabaseHelper.getWritableDatabase();
         contentDatabase = new ContentDatabaseHelper(db);
 
-        return inflater.inflate(R.layout.fragment_one, container, false);
+        return rootView;
     }
 
-    public void FeedPopulateLayoutWithFolders () {
-//        contentModels.clear();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        FeedPopulateLayoutWithFolders();
+    }
+
+    public void FeedPopulateLayoutWithFolders() {
+        contentModels.clear();
         Cursor res = contentDatabase.getAllContent();
 
-        RecyclerView recyclerView = findViewById(R.id.foldersRecyclerViewReceiveData);
+        RecyclerView recyclerView = getView().findViewById(R.id.feedRecyclerView);
 
         while (res.moveToNext()) {
             contentModels.add(new ContentModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6)));
         }
 
-        adapter = new feedActivityRecyclerViewAdapter(this, contentModels);
+        adapter = new feedActivityRecyclerViewAdapter(requireContext(), contentModels);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 }
