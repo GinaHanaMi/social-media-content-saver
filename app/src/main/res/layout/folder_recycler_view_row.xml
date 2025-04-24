@@ -8,12 +8,12 @@
     >
 
     <androidx.cardview.widget.CardView
-        android:layout_width="409dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,17 +39,16 @@
                 android:layout_height="wrap_content"
                 android:text="TITLE"
                 app:layout_constraintLeft_toRightOf="@id/thumbnailRecycleViewTextView"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/descriptionRecyclerTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DESCRIPTION"
+                app:layout_constraintBottom_toTopOf="@id/createAtRecyclerTextView"
                 app:layout_constraintLeft_toRightOf="@id/thumbnailRecycleViewTextView"
                 app:layout_constraintTop_toBottomOf="@id/titleRecyclerTextView"
-                app:layout_constraintBottom_toTopOf="@id/createAtRecyclerTextView"
 
                 />
 
@@ -58,20 +57,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CREATE AT"
-                app:layout_constraintLeft_toRightOf="@id/thumbnailRecycleViewTextView"
                 app:layout_constraintBottom_toBottomOf="parent"
-                />
+                app:layout_constraintLeft_toRightOf="@id/thumbnailRecycleViewTextView" />
 
             <CheckBox
                 android:id="@+id/selectFolderRecycleView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/thumbnailRecycleViewTextView"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

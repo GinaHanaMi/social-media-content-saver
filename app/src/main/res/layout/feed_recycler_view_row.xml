@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    >
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/feedThumbnailRecycleViewTextView"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/feedTitleRecyclerTextView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_goneMarginRight="10dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <TextView
+                android:id="@+id/feedTitleRecyclerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/feedDescriptionRecyclerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DESCRIPTION"
+                app:layout_constraintBottom_toTopOf="@id/feedSaveDateRecyclerTextView"
+                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewTextView"
+                app:layout_constraintTop_toBottomOf="@id/feedTitleRecyclerTextView"
+                />
+
+            <TextView
+                android:id="@+id/feedSaveDateRecyclerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CREATE AT"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewTextView" />
+
+            <TextView
+                android:id="@+id/feedPlatformRecyclerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CREATE AT"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/feedSaveDateRecyclerTextView" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
