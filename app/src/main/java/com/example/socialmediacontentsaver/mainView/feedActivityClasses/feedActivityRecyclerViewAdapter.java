@@ -71,11 +71,11 @@ public class feedActivityRecyclerViewAdapter extends RecyclerView.Adapter<feedAc
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            feedThumbnailRecycleViewImageViewVar = itemView.findViewById(R.id.thumbnailRecycleViewTextView);
-            feedTitleRecyclerTextViewVar = itemView.findViewById(R.id.titleRecyclerTextView);
-            feedDescriptionRecyclerTextViewVar = itemView.findViewById(R.id.descriptionRecyclerTextView);
-            feedSaveDateRecyclerTextViewVar = itemView.findViewById(R.id.createAtRecyclerTextView);
-            feedPlatformRecyclerTextViewVar = itemView.findViewById(R.id.selectFolderRecycleView);
+            feedThumbnailRecycleViewImageViewVar = itemView.findViewById(R.id.feedThumbnailRecycleViewImageView);
+            feedTitleRecyclerTextViewVar = itemView.findViewById(R.id.feedTitleRecyclerTextView);
+            feedDescriptionRecyclerTextViewVar = itemView.findViewById(R.id.feedDescriptionRecyclerTextView);
+            feedSaveDateRecyclerTextViewVar = itemView.findViewById(R.id.feedSaveDateRecyclerTextView);
+            feedPlatformRecyclerTextViewVar = itemView.findViewById(R.id.feedPlatformRecyclerTextView);
 
         }
     }
