@@ -1,10 +1,14 @@
-package com.example.socialmediacontentsaver.homeView;
+package com.example.socialmediacontentsaver.mainView;
 
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.socialmediacontentsaver.mainView.feedActivityClasses.fragmentOne;
+import com.example.socialmediacontentsaver.mainView.foldersActivityClasses.fragmentTwo;
+import com.example.socialmediacontentsaver.mainView.settingsActivityClasses.fragmentThree;
 
 public class VPAdapter extends FragmentStateAdapter {
     public VPAdapter(@NonNull FragmentActivity fragmentActivity) {

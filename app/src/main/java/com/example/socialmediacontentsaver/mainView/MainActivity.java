@@ -1,7 +1,6 @@
-package com.example.socialmediacontentsaver.homeView;
+package com.example.socialmediacontentsaver.mainView;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
