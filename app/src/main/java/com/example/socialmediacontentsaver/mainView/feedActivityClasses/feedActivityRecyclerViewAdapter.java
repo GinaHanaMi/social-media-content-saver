@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.models.ContentModel;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class feedActivityRecyclerViewAdapter extends RecyclerView.Adapter<feedActivityRecyclerViewAdapter.MyViewHolder>{
@@ -39,12 +40,19 @@ public class feedActivityRecyclerViewAdapter extends RecyclerView.Adapter<feedAc
 
     @Override
     public void onBindViewHolder(@NonNull feedActivityRecyclerViewAdapter.MyViewHolder holder, int position) {
-        // Assign values based on position of the RecyclerView
         ContentModel contentModel = contentModels.get(position);
 
-        // Load image using Glide
+        String thumbnailPath = contentModel.getThumbnail();
+
+        Uri thumbnailUri;
+        if (thumbnailPath.startsWith("content://") || thumbnailPath.startsWith("file://")) {
+            thumbnailUri = Uri.parse(thumbnailPath);
+        } else {
+            thumbnailUri = Uri.fromFile(new File(thumbnailPath)); // Handles paths like /data/user/...
+        }
+
         Glide.with(context)
-                .load(Uri.parse(contentModel.getThumbnail()))
+                .load(thumbnailUri)
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.feedThumbnailRecycleViewImageViewVar);
@@ -53,8 +61,8 @@ public class feedActivityRecyclerViewAdapter extends RecyclerView.Adapter<feedAc
         holder.feedDescriptionRecyclerTextViewVar.setText(contentModel.getDescription());
         holder.feedSaveDateRecyclerTextViewVar.setText(contentModel.getSave_date());
         holder.feedPlatformRecyclerTextViewVar.setText(contentModel.getPlatform());
-
     }
+
     @Override
     public int getItemCount() {
         // the recycler view just wants to know the number of items that are beeing displayed

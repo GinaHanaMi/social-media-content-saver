@@ -46,8 +46,6 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         // Assign values based on position of the RecyclerView
         FolderModel folderModel = folderModels.get(position);
 
-
-
         // Load image using Glide
         Glide.with(context)
                 .load(Uri.parse(folderModel.getThumbnail()))
