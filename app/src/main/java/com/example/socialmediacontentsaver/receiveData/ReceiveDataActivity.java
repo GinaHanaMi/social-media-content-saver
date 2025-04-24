@@ -61,8 +61,6 @@ public class ReceiveDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("DEBUG", "onCreate called");
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_receive_data);
 
@@ -95,7 +93,6 @@ public class ReceiveDataActivity extends AppCompatActivity {
                         public void onMetadataFetched(String title, String description, String savedPath, String fetchedPlatform) {
                             receiveTitleEditText.setText(title);
                             receiveDescriptionEditText.setText(description);
-                            Log.d("DEBUG", "onMetadataFetched called");
                             if (savedPath != null) {
                                 Uri imageUri = Uri.fromFile(new java.io.File(savedPath));
                                 receiveThumbnailImageView.setImageURI(imageUri);
