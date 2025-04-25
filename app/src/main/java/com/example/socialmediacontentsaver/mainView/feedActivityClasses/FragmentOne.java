@@ -19,9 +19,9 @@ import com.example.socialmediacontentsaver.models.ContentModel;
 
 import java.util.ArrayList;
 
-public class fragmentOne extends Fragment {
+public class FragmentOne extends Fragment {
     ContentDatabaseHelper contentDatabase;
-    feedActivityRecyclerViewAdapter adapter;
+    FeedActivityRecyclerViewAdapter adapter;
     ArrayList<ContentModel> contentModels = new ArrayList<>();
 
     @Override
@@ -52,7 +52,7 @@ public class fragmentOne extends Fragment {
             contentModels.add(new ContentModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6)));
         }
 
-        adapter = new feedActivityRecyclerViewAdapter(requireContext(), contentModels);
+        adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

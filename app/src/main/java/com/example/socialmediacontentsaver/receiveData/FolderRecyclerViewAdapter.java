@@ -36,7 +36,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         // Where the layout gets inflated and it gives look to rows
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.folder_recycler_view_row, parent, false);
+        View view = inflater.inflate(R.layout.receive_data_folder_recycler_view_row, parent, false);
 
         return new FolderRecyclerViewAdapter.MyViewHolder(view);
     }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.example.socialmediacontentsaver.R;
 
 
-public class fragmentTwo extends Fragment {
+public class FragmentTwo extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

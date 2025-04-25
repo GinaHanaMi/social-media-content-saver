@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mainView.feedActivityClasses.fragmentOne">
+    tools:context=".mainView.feedActivityClasses.FragmentOne">
 
-    <!-- TODO: Update blank fragment layout -->
     <SearchView
         android:id="@+id/feedSearchView"
         android:layout_width="match_parent"

@@ -18,28 +18,28 @@ import com.example.socialmediacontentsaver.models.ContentModel;
 import java.io.File;
 import java.util.ArrayList;
 
-public class feedActivityRecyclerViewAdapter extends RecyclerView.Adapter<feedActivityRecyclerViewAdapter.MyViewHolder>{
+public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedActivityRecyclerViewAdapter.MyViewHolder>{
     Context context;
     ArrayList<ContentModel> contentModels;
 
-    public feedActivityRecyclerViewAdapter(Context context, ArrayList<ContentModel> contentModels) {
+    public FeedActivityRecyclerViewAdapter(Context context, ArrayList<ContentModel> contentModels) {
         this.context = context;
         this.contentModels = contentModels;
     }
 
     @NonNull
     @Override
-    public feedActivityRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FeedActivityRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Where the layout gets inflated and it gives look to rows
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.feed_recycler_view_row, parent, false);
 
-        return new feedActivityRecyclerViewAdapter.MyViewHolder(view);
+        return new FeedActivityRecyclerViewAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull feedActivityRecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FeedActivityRecyclerViewAdapter.MyViewHolder holder, int position) {
         ContentModel contentModel = contentModels.get(position);
 
         String thumbnailPath = contentModel.getThumbnail();
