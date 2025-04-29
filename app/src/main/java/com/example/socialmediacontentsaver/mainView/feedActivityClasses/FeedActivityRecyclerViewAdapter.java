@@ -62,6 +62,7 @@ public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedAc
         Glide.with(context)
                 .load(thumbnailUri)
                 .placeholder(R.drawable.ic_launcher_background)
+                .override(160, 90)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.feedThumbnailRecycleViewImageViewVar);
 

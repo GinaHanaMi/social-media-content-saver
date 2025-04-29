@@ -40,8 +40,9 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     FeedActivityRecyclerViewAdapter adapter;
     ArrayList<ContentModel> contentModels = new ArrayList<>();
     SearchView feedSearchView;
-
     String selectedContentThumbnailPath = null;
+    private ActivityResultLauncher<Intent> contentImagePickerLauncher;
+    private ImageButton editContentImageButton;
 
     @Override
     public void onResume() {
@@ -52,6 +53,24 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        contentImagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            selectedContentThumbnailPath = imageUri.toString();
+
+                            // Load the selected image into the editContentImageButton
+                            Glide.with(requireContext())
+                                    .load(imageUri)
+                                    .placeholder(R.drawable.ic_launcher_background)
+                                    .error(R.drawable.ic_launcher_foreground)
+                                    .into(editContentImageButton);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -139,6 +158,8 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
         feedDialogEditContentButton.setOnClickListener(view -> {
             View editDialogView = getLayoutInflater().inflate(R.layout.edit_content_dialog, null);
+
+            editContentImageButton = editDialogView.findViewById(R.id.editContentImageButton);
             EditText editContentTitleEditText = editDialogView.findViewById(R.id.editContentTitleEditText);
             EditText editContentDescriptionEditText = editDialogView.findViewById(R.id.editContentDescriptionEditText);
             Button editContentSaveButton = editDialogView.findViewById(R.id.editContentSaveButton);
@@ -152,6 +173,12 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                 thumbnailUri = Uri.fromFile(new File(thumbnailPath));
             }
 
+            Glide.with(requireContext())
+                    .load(thumbnailUri)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(editContentImageButton);
+
             editContentTitleEditText.setText(contentModels.get(position).getTitle());
             editContentDescriptionEditText.setText(contentModels.get(position).getDescription());
 
@@ -160,6 +187,14 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                     .create();
 
             editDialog.show();
+
+            editContentImageButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                contentImagePickerLauncher.launch(intent);
+            });
+
 
             editContentSaveButton.setOnClickListener(v -> {
                 String newThumbnail = (selectedContentThumbnailPath != null) ?

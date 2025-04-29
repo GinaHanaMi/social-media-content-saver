@@ -20,6 +20,13 @@
             android:layout_height="wrap_content"
             android:text="Edit content" />
 
+        <ImageButton
+            android:id="@+id/editContentImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
         <EditText
             android:id="@+id/editContentTitleEditText"
             android:layout_width="match_parent"

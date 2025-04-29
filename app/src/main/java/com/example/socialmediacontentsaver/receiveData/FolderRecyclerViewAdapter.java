@@ -50,6 +50,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         Glide.with(context)
                 .load(Uri.parse(folderModel.getThumbnail()))
                 .placeholder(R.drawable.ic_launcher_background)
+                .override(160, 90)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.thumbnailRecycleViewTextViewVar);
 

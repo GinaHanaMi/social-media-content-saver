@@ -217,8 +217,11 @@ public class ReceiveDataActivity extends AppCompatActivity {
 
             folderThumbnailButton.setOnClickListener(view -> {
                 currentFolderThumbnailButton = folderThumbnailButton;
-                Intent intent = new Intent(Intent.ACTION_PICK);
+
+                // Intent to pick image from local storage
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);  // Hint to only show local files
                 folderImagePickerLauncher.launch(intent);
             });
         });
