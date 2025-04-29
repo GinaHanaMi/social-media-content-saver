@@ -1,9 +1,3 @@
-Tagi zeby bylo latwiej cos znalezc, bo w kurwe rzeczy ludzie dodaja do ulubionych itp i potem nie moga znalezc.
-Speech to text zeby bylo transkrypt zeby bylo latwiej cos znalezc
-
-oczyszczenie kodu i refactoring nazw zmiennych - bo mi małe spaghetti powstaje xd
-filtrowanie kontentu po parametrach takich jak data dodania, platforma
-zrobienie by feed wyświetlał się od najnowszego + póki co jest tylko data,
-będę musiał wprowadzić godzinę i minutę, by to działało
+Tagi zeby bylo latwiej cos znalezc
 przytrzymanie folderu ny usunąć wraz z całym kontentem oraz usuwanie contentu z folderu, ale nie usuwanie ogólnie jeśli nie ma przyposanego folderu, bo nie musi
 no i kwestie wizualne, bo to plain xml, bez stylizacji
