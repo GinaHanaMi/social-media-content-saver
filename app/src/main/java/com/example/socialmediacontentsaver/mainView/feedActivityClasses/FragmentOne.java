@@ -41,21 +41,21 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     ArrayList<ContentModel> contentModels = new ArrayList<>();
     SearchView feedSearchView;
 
-    String selectedFolderThumbnailPath = null;
+    String selectedContentThumbnailPath = null;
 
-    private ActivityResultLauncher<Intent> folderImagePickerLauncher;
+    private ActivityResultLauncher<Intent> contentImagePickerLauncher;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        folderImagePickerLauncher = registerForActivityResult(
+        contentImagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         if (imageUri != null) {
-                            selectedFolderThumbnailPath = imageUri.toString();
+                            selectedContentThumbnailPath = imageUri.toString();
                         }
                     }
                 });
@@ -76,10 +76,10 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FeedPopulateLayoutWithFolders();
+        FeedPopulateLayoutWithContent();
     }
 
-    public void FeedPopulateLayoutWithFolders() {
+    public void FeedPopulateLayoutWithContent() {
         contentModels.clear();
         Cursor res = contentDatabase.getAllContent();
 
@@ -179,12 +179,12 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
             editContentImageButton.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                folderImagePickerLauncher.launch(intent);
+                contentImagePickerLauncher.launch(intent);
             });
 
             editContentSaveButton.setOnClickListener(v -> {
-                String newThumbnail = (selectedFolderThumbnailPath != null) ?
-                        selectedFolderThumbnailPath : contentModels.get(position).getThumbnail();
+                String newThumbnail = (selectedContentThumbnailPath != null) ?
+                        selectedContentThumbnailPath : contentModels.get(position).getThumbnail();
 
                 contentDatabase.updateContent(
                         Integer.parseInt(contentModels.get(position).getId()),
@@ -196,7 +196,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                         contentModels.get(position).getLink()
                 );
 
-                FeedPopulateLayoutWithFolders(); // refresh the list
+                FeedPopulateLayoutWithContent(); // refresh the list
                 editDialog.dismiss();
                 dialog.dismiss();
             });
@@ -215,7 +215,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
         feedDialogDeleteContentButton.setOnClickListener(view -> {
             contentDatabase.deleteContent(Integer.parseInt(contentModels.get(position).getId()));
-            FeedPopulateLayoutWithFolders();
+            FeedPopulateLayoutWithContent();
             dialog.dismiss();
         });
     }
