@@ -29,6 +29,12 @@ public class FragmentTwo extends Fragment {
     SearchView foldersSearchView;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        FoldersPopulateLayoutWithFolders();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);

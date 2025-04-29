@@ -43,22 +43,15 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
     String selectedContentThumbnailPath = null;
 
-    private ActivityResultLauncher<Intent> contentImagePickerLauncher;
+    @Override
+    public void onResume() {
+        super.onResume();
+        FeedPopulateLayoutWithContent();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        contentImagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            selectedContentThumbnailPath = imageUri.toString();
-                        }
-                    }
-                });
     }
 
     @Override

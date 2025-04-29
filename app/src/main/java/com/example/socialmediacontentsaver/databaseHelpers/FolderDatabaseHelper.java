@@ -22,7 +22,7 @@ public class FolderDatabaseHelper {
     }
 
     public Cursor getAllFolders() {
-        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.FOLDERS_TABLE, null);
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.FOLDERS_TABLE + " ORDER BY id DESC", null);
     }
 
     public Cursor getFolderById(int id) {

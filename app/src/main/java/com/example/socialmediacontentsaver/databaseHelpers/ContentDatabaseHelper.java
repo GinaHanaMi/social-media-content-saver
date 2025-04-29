@@ -23,7 +23,7 @@ public class ContentDatabaseHelper {
     }
 
     public Cursor getAllContent() {
-        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.CONTENT_TABLE, null);
+        return db.rawQuery("SELECT * FROM " + AppDatabaseHelper.CONTENT_TABLE + " ORDER BY ID DESC", null);
     }
 
     public Cursor getContentById(int id) {

@@ -5,11 +5,5 @@ oczyszczenie kodu i refactoring nazw zmiennych - bo mi małe spaghetti powstaje 
 filtrowanie kontentu po parametrach takich jak data dodania, platforma
 zrobienie by feed wyświetlał się od najnowszego + póki co jest tylko data,
 będę musiał wprowadzić godzinę i minutę, by to działało
-przytrzymanie na kontent lub folder by móc wybrać opcje:
-- wyświetlenie kontentu, 
-- otworzenie go w przeglądarce,
-- edycja jego danych, 
-- usunięcie go
-przytrzymanie folderu, by móc go edytować, usunąć, usunąć wraz z całym kontentem, udostępnianie w przyszłości,
- bo to będzie wymagać jakiegoś serwera, a to inna bajka już
+przytrzymanie folderu ny usunąć wraz z całym kontentem oraz usuwanie contentu z folderu, ale nie usuwanie ogólnie jeśli nie ma przyposanego folderu, bo nie musi
 no i kwestie wizualne, bo to plain xml, bez stylizacji
