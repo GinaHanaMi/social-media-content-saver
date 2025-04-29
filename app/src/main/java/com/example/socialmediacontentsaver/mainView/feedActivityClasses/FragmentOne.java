@@ -1,12 +1,17 @@
 package com.example.socialmediacontentsaver.mainView.feedActivityClasses;
 
-import android.annotation.SuppressLint;
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,23 +26,40 @@ import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
 import com.example.socialmediacontentsaver.models.ContentModel;
-import com.example.socialmediacontentsaver.receiveData.ReceiveDataActivity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     ContentDatabaseHelper contentDatabase;
     FeedActivityRecyclerViewAdapter adapter;
     ArrayList<ContentModel> contentModels = new ArrayList<>();
     SearchView feedSearchView;
+
+    String selectedFolderThumbnailPath = null;
+
+    private ActivityResultLauncher<Intent> folderImagePickerLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        folderImagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            selectedFolderThumbnailPath = imageUri.toString();
+                        }
+                    }
+                });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,13 +69,12 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         AppDatabaseHelper appDatabaseHelper = new AppDatabaseHelper(requireContext());
         SQLiteDatabase db = appDatabaseHelper.getWritableDatabase();
         contentDatabase = new ContentDatabaseHelper(db);
-        setupActionOnFeedContentDialog();
 
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FeedPopulateLayoutWithFolders();
     }
@@ -63,7 +84,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         Cursor res = contentDatabase.getAllContent();
 
         RecyclerView recyclerView = getView().findViewById(R.id.feedRecyclerView);
-        feedSearchView = getView().findViewById(R.id.feedSearchView); // ✅ Correctly assigning the SearchView
+        feedSearchView = getView().findViewById(R.id.feedSearchView);
 
         feedSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -88,7 +109,6 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
-
 
     private void feedFilter(String newText) {
         ArrayList<ContentModel> feedFilteredList = new ArrayList<>();
@@ -125,9 +145,61 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         });
 
         feedDialogEditContentButton.setOnClickListener(view -> {
-            Toast.makeText(getActivity(), "feedEdit",
-                    Toast.LENGTH_LONG).show();
-            dialog.dismiss();
+            View editDialogView = getLayoutInflater().inflate(R.layout.edit_content_dialog, null);
+
+            ImageButton editContentImageButton = editDialogView.findViewById(R.id.editContentImageButton);
+            EditText editContentTitleEditText = editDialogView.findViewById(R.id.editContentTitleEditText);
+            EditText editContentDescriptionEditText = editDialogView.findViewById(R.id.editContentDescriptionEditText);
+            Button editContentSaveButton = editDialogView.findViewById(R.id.editContentSaveButton);
+
+            String thumbnailPath = contentModels.get(position).getThumbnail();
+            Uri thumbnailUri;
+
+            if (thumbnailPath.startsWith("content://") || thumbnailPath.startsWith("file://")) {
+                thumbnailUri = Uri.parse(thumbnailPath);
+            } else {
+                thumbnailUri = Uri.fromFile(new File(thumbnailPath));
+            }
+
+            Glide.with(requireContext())
+                    .load(thumbnailUri)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(editContentImageButton);
+
+            editContentTitleEditText.setText(contentModels.get(position).getTitle());
+            editContentDescriptionEditText.setText(contentModels.get(position).getDescription());
+
+            AlertDialog editDialog = new AlertDialog.Builder(requireContext())
+                    .setView(editDialogView)
+                    .create();
+
+            editDialog.show();
+
+            editContentImageButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                folderImagePickerLauncher.launch(intent);
+            });
+
+            editContentSaveButton.setOnClickListener(v -> {
+                String newThumbnail = (selectedFolderThumbnailPath != null) ?
+                        selectedFolderThumbnailPath : contentModels.get(position).getThumbnail();
+
+                contentDatabase.updateContent(
+                        Integer.parseInt(contentModels.get(position).getId()),
+                        newThumbnail,
+                        editContentTitleEditText.getText().toString(),
+                        editContentDescriptionEditText.getText().toString(),
+                        contentModels.get(position).getPlatform(),
+                        contentModels.get(position).getSave_date(),
+                        contentModels.get(position).getLink()
+                );
+
+                FeedPopulateLayoutWithFolders(); // refresh the list
+                editDialog.dismiss();
+                dialog.dismiss();
+            });
         });
 
         feedDialogShareContentButton.setOnClickListener(view -> {
@@ -138,17 +210,13 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
             Intent shareIntent = Intent.createChooser(sendContentURLIntent, null);
             startActivity(shareIntent);
-
             dialog.dismiss();
         });
 
         feedDialogDeleteContentButton.setOnClickListener(view -> {
-            Toast.makeText(getActivity(), "feedDelete",
-                    Toast.LENGTH_LONG).show();
+            contentDatabase.deleteContent(Integer.parseInt(contentModels.get(position).getId()));
+            FeedPopulateLayoutWithFolders();
             dialog.dismiss();
         });
-
-    }
-    private void setupActionOnFeedContentDialog() {
     }
 }
