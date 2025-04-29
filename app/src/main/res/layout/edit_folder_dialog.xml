@@ -15,20 +15,20 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/editContentDialogHeader"
+            android:id="@+id/editFolderDialogHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit content" />
+            android:text="Edit folder" />
 
         <ImageButton
-            android:id="@+id/editContentImageButton"
+            android:id="@+id/editFolderImageButton"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="fitCenter"
             app:srcCompat="@android:drawable/ic_menu_gallery" />
 
         <EditText
-            android:id="@+id/editContentTitleEditText"
+            android:id="@+id/editFolderTitleEditText"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginBottom="16dp"
@@ -38,7 +38,7 @@
             android:padding="8dp" />
 
         <EditText
-            android:id="@+id/editContentDescriptionEditText"
+            android:id="@+id/editFolderDescriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="24dp"
@@ -48,7 +48,7 @@
             android:padding="8dp" />
 
         <Button
-            android:id="@+id/editContentSaveButton"
+            android:id="@+id/editFolderSaveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
