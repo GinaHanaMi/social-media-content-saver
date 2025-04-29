@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
+import com.example.socialmediacontentsaver.models.ContentModel;
 import com.example.socialmediacontentsaver.models.FolderModel;
 
 import java.io.File;
@@ -25,6 +26,11 @@ public class FoldersActivityRecyclerViewAdapter extends RecyclerView.Adapter<Fol
     public FoldersActivityRecyclerViewAdapter(Context context, ArrayList<FolderModel> mainFolderModels) {
         this.context = context;
         this.mainFolderModels = mainFolderModels;
+    }
+
+    public void foldersFilterList(ArrayList<FolderModel> foldersFilteredList) {
+        mainFolderModels = foldersFilteredList;
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -27,6 +27,11 @@ public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedAc
         this.contentModels = contentModels;
     }
 
+    public void feedFilterList(ArrayList<ContentModel> feedFilteredList) {
+        contentModels = feedFilteredList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public FeedActivityRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

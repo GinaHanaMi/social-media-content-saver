@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
+import com.example.socialmediacontentsaver.models.ContentModel;
 import com.example.socialmediacontentsaver.models.FolderModel;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class FragmentTwo extends Fragment {
     FolderDatabaseHelper mainFolderDatabase;
     FoldersActivityRecyclerViewAdapter mainAdapter;
     ArrayList<FolderModel> mainFoldersModels = new ArrayList<>();
+    SearchView foldersSearchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +51,20 @@ public class FragmentTwo extends Fragment {
         Cursor res = mainFolderDatabase.getAllFolders();
 
         RecyclerView mainRecyclerView = getView().findViewById(R.id.folderRecyclerView);
+        foldersSearchView = getView().findViewById(R.id.folderSearchView);
+
+        foldersSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                foldersFilter(newText);
+                return true;
+            }
+        });
 
         while (res.moveToNext()) {
             mainFoldersModels.add(new FolderModel(res.getString(0), res.getString(1), res.getString(2), res.getString(3), res.getString(4)));
@@ -57,5 +74,17 @@ public class FragmentTwo extends Fragment {
 
         mainRecyclerView.setAdapter(mainAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+    }
+    private void foldersFilter(String newText) {
+        ArrayList<FolderModel> foldersFilteredList = new ArrayList<>();
+        for (FolderModel singleItem : mainFoldersModels) {
+            if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                    singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
+                    singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                    singleItem.getCreated_at().toLowerCase().contains(newText.toLowerCase())) {
+                foldersFilteredList.add(singleItem);
+            }
+        }
+        mainAdapter.foldersFilterList(foldersFilteredList);
     }
 }
