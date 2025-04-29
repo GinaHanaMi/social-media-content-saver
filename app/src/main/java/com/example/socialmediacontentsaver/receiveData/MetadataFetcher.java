@@ -26,14 +26,18 @@ public class MetadataFetcher {
             connection.connect();
             InputStream input = connection.getInputStream();
 
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            Bitmap originalBitmap = BitmapFactory.decodeStream(input);
+
+            int targetWidth = 160;
+            int targetHeight = (int) ((double) originalBitmap.getHeight() / originalBitmap.getWidth() * targetWidth);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, targetWidth, targetHeight, true);
 
             File directory = context.getFilesDir();
             String filename = "thumb_" + System.currentTimeMillis() + ".png";
             File imageFile = new File(directory, filename);
 
             FileOutputStream out = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            scaledBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
 

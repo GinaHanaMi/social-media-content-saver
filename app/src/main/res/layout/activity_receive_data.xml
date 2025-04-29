@@ -14,9 +14,8 @@
 
         <ImageView
             android:id="@+id/receiveThumbnail"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="@android:dimen/thumbnail_height"
-            android:scaleType="centerInside"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
 
