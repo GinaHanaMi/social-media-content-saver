@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
@@ -20,7 +21,7 @@ import com.example.socialmediacontentsaver.models.ContentModel;
 
 import java.util.ArrayList;
 
-public class FragmentOne extends Fragment {
+public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     ContentDatabaseHelper contentDatabase;
     FeedActivityRecyclerViewAdapter adapter;
     ArrayList<ContentModel> contentModels = new ArrayList<>();
@@ -70,7 +71,7 @@ public class FragmentOne extends Fragment {
                     res.getString(3), res.getString(4), res.getString(5), res.getString(6)));
         }
 
-        adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels);
+        adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
@@ -87,5 +88,11 @@ public class FragmentOne extends Fragment {
             }
         }
         adapter.feedFilterList(feedFilteredList);
+    }
+
+    @Override
+    public void onFeedItemClick(int position) {
+        Toast.makeText(getActivity(), contentModels.get(position).getTitle(),
+                Toast.LENGTH_LONG).show();
     }
 }

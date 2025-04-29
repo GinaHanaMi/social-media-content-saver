@@ -19,10 +19,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedActivityRecyclerViewAdapter.MyViewHolder>{
+    private final FeedRecyclerViewInterface feedRecyclerViewInterface;
+
     Context context;
     ArrayList<ContentModel> contentModels;
 
-    public FeedActivityRecyclerViewAdapter(Context context, ArrayList<ContentModel> contentModels) {
+    public FeedActivityRecyclerViewAdapter(Context context, ArrayList<ContentModel> contentModels, FeedRecyclerViewInterface feedRecyclerViewInterface) {
+        this.feedRecyclerViewInterface = feedRecyclerViewInterface;
         this.context = context;
         this.contentModels = contentModels;
     }
@@ -40,7 +43,7 @@ public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedAc
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.feed_recycler_view_row, parent, false);
 
-        return new FeedActivityRecyclerViewAdapter.MyViewHolder(view);
+        return new FeedActivityRecyclerViewAdapter.MyViewHolder(view, feedRecyclerViewInterface);
     }
 
     @Override
@@ -81,7 +84,7 @@ public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedAc
         ImageView feedThumbnailRecycleViewImageViewVar;
         TextView feedTitleRecyclerTextViewVar, feedDescriptionRecyclerTextViewVar, feedSaveDateRecyclerTextViewVar, feedPlatformRecyclerTextViewVar;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, FeedRecyclerViewInterface feedRecyclerViewInterface) {
             super(itemView);
 
             feedThumbnailRecycleViewImageViewVar = itemView.findViewById(R.id.feedThumbnailRecycleViewImageView);
@@ -89,6 +92,19 @@ public class FeedActivityRecyclerViewAdapter extends RecyclerView.Adapter<FeedAc
             feedDescriptionRecyclerTextViewVar = itemView.findViewById(R.id.feedDescriptionRecyclerTextView);
             feedSaveDateRecyclerTextViewVar = itemView.findViewById(R.id.feedSaveDateRecyclerTextView);
             feedPlatformRecyclerTextViewVar = itemView.findViewById(R.id.feedPlatformRecyclerTextView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (feedRecyclerViewInterface != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            feedRecyclerViewInterface.onFeedItemClick(position);
+                        }
+                    }
+                }
+            });
 
         }
     }
