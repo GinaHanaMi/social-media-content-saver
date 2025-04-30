@@ -46,4 +46,11 @@ public class ContentDatabaseHelper {
         int result = db.delete(AppDatabaseHelper.CONTENT_TABLE, "ID = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
+
+    public Cursor getFoldersForContent(int contentId) {
+        return db.rawQuery("SELECT f.id FROM " + AppDatabaseHelper.FOLDERS_TABLE + " f " +
+                "INNER JOIN " + AppDatabaseHelper.FOLDER_CONTENT_TABLE + " fc " +
+                "ON f.id = fc.folder_id " +
+                "WHERE fc.content_id = ?", new String[]{String.valueOf(contentId)});
+    }
 }

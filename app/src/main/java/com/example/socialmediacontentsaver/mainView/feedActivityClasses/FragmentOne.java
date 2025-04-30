@@ -35,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
+
     ContentDatabaseHelper contentDatabase;
     FeedActivityRecyclerViewAdapter adapter;
     ArrayList<ContentModel> contentModels = new ArrayList<>();
@@ -161,6 +162,17 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                         case "contentsavedate":
                             if (!singleItem.getSave_date().toLowerCase().contains(value)) matchesAll = false;
                             break;
+                        case "folderid":  // Adding folder filter
+                            boolean hasFolderMatch = false;
+                            Cursor folderCursor = contentDatabase.getFoldersForContent(Integer.parseInt(singleItem.getId()));
+                            while (folderCursor.moveToNext()) {
+                                if (folderCursor.getString(0).equals(value)) {
+                                    hasFolderMatch = true;
+                                    break;
+                                }
+                            }
+                            if (!hasFolderMatch) matchesAll = false;
+                            break;
                         default:
                             matchesAll = false;
                             break;
@@ -187,7 +199,6 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
         adapter.feedFilterList(feedFilteredList);
     }
-
 
     @Override
     public void onFeedItemClick(int position) {
