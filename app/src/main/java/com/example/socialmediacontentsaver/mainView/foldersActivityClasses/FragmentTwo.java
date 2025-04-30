@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
+import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
+import com.example.socialmediacontentsaver.databaseHelpers.FolderContentAssociationHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
 import com.example.socialmediacontentsaver.models.ContentModel;
 import com.example.socialmediacontentsaver.models.FolderModel;
@@ -38,8 +40,12 @@ import java.util.ArrayList;
 
 public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface{
     FolderDatabaseHelper mainFolderDatabase;
+    FolderContentAssociationHelper mainFolderContentAssociationDatabase;
+
+    ContentDatabaseHelper mainContentDatabase;
     FoldersActivityRecyclerViewAdapter mainAdapter;
     ArrayList<FolderModel> mainFoldersModels = new ArrayList<>();
+    ArrayList<ContentModel> contentToDeleteFromFolder = new ArrayList<>();
     SearchView foldersSearchView;
 
     String selectedFolderThumbnailPath = null;
@@ -83,6 +89,8 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
         AppDatabaseHelper appDatabaseHelper = new AppDatabaseHelper(requireContext());
         SQLiteDatabase db = appDatabaseHelper.getWritableDatabase();
         mainFolderDatabase = new FolderDatabaseHelper(db);
+        mainFolderContentAssociationDatabase = new FolderContentAssociationHelper(db);
+        mainContentDatabase = new ContentDatabaseHelper(db);
 
         return rootView;
     }
@@ -217,14 +225,50 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
         });
 
         folderDialogDeleteFolderButton.setOnClickListener(view -> {
+            mainFolderContentAssociationDatabase.deleteContentsInFolderAssociation(Integer.parseInt(mainFoldersModels.get(position).getId()));
             mainFolderDatabase.deleteFolder(Integer.parseInt(mainFoldersModels.get(position).getId()));
             FoldersPopulateLayoutWithFolders();
             folderOptionsDialog.dismiss();
         });
 
         folderDialogDeleteFolderAndContentsButton.setOnClickListener(view -> {
-            // dodać usuwanie kontentu jeszcze z tego folderu kontent /////////////////////////////////
-            mainFolderDatabase.deleteFolder(Integer.parseInt(mainFoldersModels.get(position).getId()));
+            int folderId = Integer.parseInt(mainFoldersModels.get(position).getId());
+
+            // Step 1: Get all contents from the folder
+            ArrayList<ContentModel> contentToDeleteFromFolder = new ArrayList<>();
+            Cursor contentsCursor = mainFolderContentAssociationDatabase.getContentsInFolder(folderId);
+            while (contentsCursor.moveToNext()) {
+                contentToDeleteFromFolder.add(new ContentModel(
+                        contentsCursor.getString(0), // ID
+                        contentsCursor.getString(1), // title
+                        contentsCursor.getString(2),
+                        contentsCursor.getString(3),
+                        contentsCursor.getString(4),
+                        contentsCursor.getString(5),
+                        contentsCursor.getString(6)
+                ));
+            }
+            contentsCursor.close(); // Always close cursor
+
+            // Step 2: Remove the folder-content associations for this folder
+            mainFolderContentAssociationDatabase.deleteContentsInFolderAssociation(folderId);
+
+            // Step 3: For each content, delete it from saved_content_table if it's not associated with any other folder
+            for (ContentModel singleContent : contentToDeleteFromFolder) {
+                int contentId = Integer.parseInt(singleContent.getId());
+
+                boolean isStillAssociated = mainFolderContentAssociationDatabase
+                        .isContentAssociatedWithAnyFolder(contentId);
+
+                if (!isStillAssociated) {
+                    mainContentDatabase.deleteContent(contentId);
+                }
+            }
+
+            // Step 4: Delete the folder itself
+            mainFolderDatabase.deleteFolder(folderId);
+
+            // Step 5: Refresh UI and dismiss dialog
             FoldersPopulateLayoutWithFolders();
             folderOptionsDialog.dismiss();
         });

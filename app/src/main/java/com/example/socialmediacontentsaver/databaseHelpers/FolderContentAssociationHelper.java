@@ -38,4 +38,19 @@ public class FolderContentAssociationHelper {
                 "ON f.id = fc.folder_id " +
                 "WHERE fc.content_id = ?", new String[]{String.valueOf(contentId)});
     }
+
+    public boolean deleteContentsInFolderAssociation(int folderId) {
+        int result = db.delete(AppDatabaseHelper.FOLDER_CONTENT_TABLE,
+                "folder_id = ?",
+                new String[]{String.valueOf(folderId)});
+        return result > 0;
+    }
+
+    public boolean isContentAssociatedWithAnyFolder(int contentId) {
+        Cursor cursor = db.rawQuery("SELECT 1 FROM " + AppDatabaseHelper.FOLDER_CONTENT_TABLE +
+                " WHERE content_id = ? LIMIT 1", new String[]{String.valueOf(contentId)});
+        boolean isAssociated = cursor.moveToFirst();
+        cursor.close();
+        return isAssociated;
+    }
 }
