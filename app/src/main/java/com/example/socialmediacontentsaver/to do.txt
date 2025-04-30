@@ -1,3 +1,6 @@
 Tagi zeby bylo latwiej cos znalezc
-advanced query system
+advanced query system - do folderów już tylko
+dodawanie contentu do folderu na nowo
+usuwanie kontentu z folderu bez usuwania folderu
+dodawanie folderu z tabs folders
 no i kwestie wizualne, bo to plain xml, bez stylizacji

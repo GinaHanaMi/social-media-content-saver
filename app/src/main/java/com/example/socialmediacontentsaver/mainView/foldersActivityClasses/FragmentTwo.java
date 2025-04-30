@@ -131,15 +131,74 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
     private void foldersFilter(String newText) {
+//        ArrayList<FolderModel> foldersFilteredList = new ArrayList<>();
+//        for (FolderModel singleItem : mainFoldersModels) {
+//            if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+//                    singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
+//                    singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+//                    singleItem.getCreated_at().toLowerCase().contains(newText.toLowerCase())) {
+//                foldersFilteredList.add(singleItem);
+//            }
+//        }
+//        mainAdapter.foldersFilterList(foldersFilteredList);
+
         ArrayList<FolderModel> foldersFilteredList = new ArrayList<>();
-        for (FolderModel singleItem : mainFoldersModels) {
-            if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getCreated_at().toLowerCase().contains(newText.toLowerCase())) {
-                foldersFilteredList.add(singleItem);
+
+        newText = newText.trim();
+
+        if (newText.toLowerCase().startsWith("find:{") && newText.endsWith("}")) {
+            // Only parse if the format is valid
+            String rawQuery = newText.substring(6, newText.length() - 1); // between find:{ and }
+            String[] conditions = rawQuery.split(";");
+
+            for (FolderModel singleItem : mainFoldersModels) {
+                boolean matchesAll = true;
+
+                for (String condition : conditions) {
+                    String[] keyValue = condition.split(":", 2);
+                    if (keyValue.length != 2) {
+                        matchesAll = false;
+                        break;
+                    }
+
+                    String key = keyValue[0].trim().toLowerCase();
+                    String value = keyValue[1].trim().toLowerCase();
+
+                    switch (key) {
+                        case "folderid":
+                            if (!singleItem.getId().toLowerCase().equals(value)) matchesAll = false;
+                            break;
+                        case "foldertitle":
+                            if (!singleItem.getTitle().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        case "folderdescription":
+                            if (!singleItem.getDescription().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        case "foldercreatedat":
+                            if (!singleItem.getCreated_at().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        default:
+                            matchesAll = false;
+                            break;
+                    }
+
+                    if (!matchesAll) break;
+                }
+                if (matchesAll) {
+                    foldersFilteredList.add(singleItem);
+                }
+            }
+
+        } else {
+            for (FolderModel singleItem : mainFoldersModels) {
+                if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                        singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
+                        singleItem.getCreated_at().toLowerCase().contains(newText.toLowerCase())) {
+                    foldersFilteredList.add(singleItem);
+                }
             }
         }
+
         mainAdapter.foldersFilterList(foldersFilteredList);
     }
 
