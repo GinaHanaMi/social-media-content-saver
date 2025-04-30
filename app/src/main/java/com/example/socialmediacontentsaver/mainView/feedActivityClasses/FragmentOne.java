@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
 import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
+import com.example.socialmediacontentsaver.mainView.SharedViewModel;
 import com.example.socialmediacontentsaver.models.ContentModel;
 
 import java.io.File;
@@ -89,6 +91,15 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FeedPopulateLayoutWithContent();
+
+        SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        sharedViewModel.getSearchQuery().observe(getViewLifecycleOwner(), query -> {
+            if (query != null && !query.isEmpty()) {
+                feedSearchView.setQuery(query, true); // Triggers filtering
+                feedSearchView.setIconified(false);
+                feedSearchView.requestFocus();
+            }
+        });
     }
 
     public void FeedPopulateLayoutWithContent() {
@@ -98,6 +109,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         RecyclerView recyclerView = getView().findViewById(R.id.feedRecyclerView);
         feedSearchView = getView().findViewById(R.id.feedSearchView);
 
+        // Setting up SearchView listener for filtering
         feedSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -111,6 +123,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
             }
         });
 
+        // Adding all content from the database to the list
         while (res.moveToNext()) {
             contentModels.add(new ContentModel(
                     res.getString(0), res.getString(1), res.getString(2),
@@ -118,10 +131,17 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                     res.getString(6)));
         }
 
-        adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // Initialize the adapter only once
+        if (adapter == null) {
+            adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels, this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        } else {
+            // If the adapter already exists, notify that data set has changed
+            adapter.notifyDataSetChanged();
+        }
     }
+
 
     private void feedFilter(String newText) {
         ArrayList<ContentModel> feedFilteredList = new ArrayList<>();
@@ -129,13 +149,12 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         newText = newText.trim();
 
         if (newText.toLowerCase().startsWith("find:{") && newText.endsWith("}")) {
-            // Only parse if the format is valid
-            String rawQuery = newText.substring(6, newText.length() - 1); // between find:{ and }
+            String rawQuery = newText.substring(6, newText.length() - 1); // Extract the query part
             String[] conditions = rawQuery.split(";");
 
+            // Filtering based on conditions
             for (ContentModel singleItem : contentModels) {
                 boolean matchesAll = true;
-
                 for (String condition : conditions) {
                     String[] keyValue = condition.split(":", 2);
                     if (keyValue.length != 2) {
@@ -162,7 +181,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                         case "savedate":
                             if (!singleItem.getSave_date().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "folderid":  // Adding folder filter
+                        case "folderid":  // Folder filter logic
                             boolean hasFolderMatch = false;
                             Cursor folderCursor = contentDatabase.getFoldersForContent(Integer.parseInt(singleItem.getId()));
                             while (folderCursor.moveToNext()) {
@@ -187,6 +206,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
             }
 
         } else {
+            // Regular text filter
             for (ContentModel singleItem : contentModels) {
                 if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
                         singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
@@ -197,7 +217,9 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
             }
         }
 
+        // Update the adapter's data and notify it
         adapter.feedFilterList(feedFilteredList);
+        adapter.notifyDataSetChanged();  // Notify adapter of changes
     }
 
     @Override
@@ -293,8 +315,9 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         });
 
         feedDialogDeleteContentButton.setOnClickListener(view -> {
-            contentDatabase.deleteFolderAssociation(Integer.parseInt(contentModels.get(position).getId()));
-            contentDatabase.deleteContent(Integer.parseInt(contentModels.get(position).getId()));
+            int folderIdToDelete = Integer.parseInt(contentModels.get(position).getId());
+            contentDatabase.deleteFolderAssociation(folderIdToDelete);
+            contentDatabase.deleteContent(folderIdToDelete);
             FeedPopulateLayoutWithContent();
             dialog.dismiss();
         });

@@ -13,8 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,17 +33,17 @@ import com.example.socialmediacontentsaver.databaseHelpers.AppDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.ContentDatabaseHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderContentAssociationHelper;
 import com.example.socialmediacontentsaver.databaseHelpers.FolderDatabaseHelper;
+import com.example.socialmediacontentsaver.mainView.SharedViewModel;
 import com.example.socialmediacontentsaver.models.ContentModel;
 import com.example.socialmediacontentsaver.models.FolderModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.util.ArrayList;
 
-
-public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface{
+public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface {
     FolderDatabaseHelper mainFolderDatabase;
     FolderContentAssociationHelper mainFolderContentAssociationDatabase;
-
     ContentDatabaseHelper mainContentDatabase;
     FoldersActivityRecyclerViewAdapter mainAdapter;
     ArrayList<FolderModel> mainFoldersModels = new ArrayList<>();
@@ -51,6 +53,9 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
     String selectedFolderThumbnailPath = null;
     private ActivityResultLauncher<Intent> folderImagePickerLauncher;
     private ImageButton editFolderImageButton;
+
+    private AlertDialog mainFoldersDialog; // Declare mainFoldersDialog
+    private AlertDialog folderOptionsDialog; // Declare folderOptionsDialog
 
     @Override
     public void onResume() {
@@ -130,24 +135,13 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
         mainRecyclerView.setAdapter(mainAdapter);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
-    private void foldersFilter(String newText) {
-//        ArrayList<FolderModel> foldersFilteredList = new ArrayList<>();
-//        for (FolderModel singleItem : mainFoldersModels) {
-//            if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
-//                    singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
-//                    singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
-//                    singleItem.getCreated_at().toLowerCase().contains(newText.toLowerCase())) {
-//                foldersFilteredList.add(singleItem);
-//            }
-//        }
-//        mainAdapter.foldersFilterList(foldersFilteredList);
 
+    private void foldersFilter(String newText) {
         ArrayList<FolderModel> foldersFilteredList = new ArrayList<>();
 
         newText = newText.trim();
 
         if (newText.toLowerCase().startsWith("find:{") && newText.endsWith("}")) {
-            // Only parse if the format is valid
             String rawQuery = newText.substring(6, newText.length() - 1); // between find:{ and }
             String[] conditions = rawQuery.split(";");
 
@@ -211,23 +205,34 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
         Button folderDialogDeleteFolderButton = dialogView.findViewById(R.id.folderDialogDeleteFolderButton);
         Button folderDialogDeleteFolderAndContentsButton = dialogView.findViewById(R.id.folderDialogDeleteFolderAndContentsButton);
 
-        AlertDialog folderOptionsDialog = new AlertDialog.Builder(requireContext())
+        folderOptionsDialog = new AlertDialog.Builder(requireContext())
                 .setView(dialogView)
                 .create();
 
         folderOptionsDialog.show();
 
         folderDialogDisplayContentsFolderButton.setOnClickListener(view -> {
-            //go to fragment one, insert into search the query (remember to create query system)
-            // also rememver to change the tab you are on before doing that
-            // remember to close dialogs also... all the dialogs, there are two
-            folderOptionsDialog.dismiss();
+            int folderId = Integer.parseInt(mainFoldersModels.get(position).getId());
+
+            // Set the search query
+            SharedViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+            sharedViewModel.setSearchQuery("find:{folderid:" + folderId + "}");
+
+
+            // Switch to FragmentOne (tab 0)
+            TabLayout tabLayout = requireActivity().findViewById(R.id.tabLayout);
+            ViewPager2 viewPager2 = requireActivity().findViewById(R.id.viewPager);
+            tabLayout.selectTab(tabLayout.getTabAt(0));
+            viewPager2.setCurrentItem(0);
+
+            // Dismiss both dialogs
+            if (folderOptionsDialog != null) folderOptionsDialog.dismiss();
+            if (mainFoldersDialog != null) mainFoldersDialog.dismiss();
         });
 
         folderDialogEditFolderButton.setOnClickListener(view -> {
             View editDialogView = getLayoutInflater().inflate(R.layout.edit_folder_dialog, null);
 
-            // tutaj wgl inna magia się będzie działa
             editFolderImageButton = editDialogView.findViewById(R.id.editFolderImageButton);
             EditText editFolderTitleEditText = editDialogView.findViewById(R.id.editFolderTitleEditText);
             EditText editFolderDescriptionEditText = editDialogView.findViewById(R.id.editFolderDescriptionEditText);
@@ -263,7 +268,6 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 folderImagePickerLauncher.launch(intent);
             });
-
 
             editFolderSaveButton.setOnClickListener(v -> {
                 String newThumbnail = (selectedFolderThumbnailPath != null) ?
