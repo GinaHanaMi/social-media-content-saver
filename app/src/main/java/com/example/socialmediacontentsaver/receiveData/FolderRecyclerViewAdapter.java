@@ -15,6 +15,7 @@ import com.example.socialmediacontentsaver.models.FolderModel;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -47,8 +48,17 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         FolderModel folderModel = folderModels.get(position);
 
         // Load image using Glide
+        String thumbnailPath = folderModel.getThumbnail();
+        Uri thumbnailUri;
+
+        if (thumbnailPath.startsWith("content://") || thumbnailPath.startsWith("file://")) {
+            thumbnailUri = Uri.parse(thumbnailPath);
+        } else {
+            thumbnailUri = Uri.fromFile(new File(thumbnailPath));
+        }
+
         Glide.with(context)
-                .load(Uri.parse(folderModel.getThumbnail()))
+                .load(thumbnailUri)
                 .placeholder(R.drawable.ic_launcher_background)
                 .override(160, 90)
                 .error(R.drawable.ic_launcher_foreground)
