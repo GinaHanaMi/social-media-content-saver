@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
@@ -114,7 +113,8 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         while (res.moveToNext()) {
             contentModels.add(new ContentModel(
                     res.getString(0), res.getString(1), res.getString(2),
-                    res.getString(3), res.getString(4), res.getString(5), res.getString(6)));
+                    res.getString(3), res.getString(4), res.getString(5),
+                    res.getString(6)));
         }
 
         adapter = new FeedActivityRecyclerViewAdapter(requireContext(), contentModels, this);
@@ -124,16 +124,70 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
 
     private void feedFilter(String newText) {
         ArrayList<ContentModel> feedFilteredList = new ArrayList<>();
-        for (ContentModel singleItem : contentModels) {
-            if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getPlatform().toLowerCase().contains(newText.toLowerCase()) ||
-                    singleItem.getSave_date().toLowerCase().contains(newText.toLowerCase())) {
-                feedFilteredList.add(singleItem);
+
+        newText = newText.trim();
+
+        if (newText.toLowerCase().startsWith("find:{") && newText.endsWith("}")) {
+            // Only parse if the format is valid
+            String rawQuery = newText.substring(6, newText.length() - 1); // between find:{ and }
+            String[] conditions = rawQuery.split(";");
+
+            for (ContentModel singleItem : contentModels) {
+                boolean matchesAll = true;
+
+                for (String condition : conditions) {
+                    String[] keyValue = condition.split(":", 2);
+                    if (keyValue.length != 2) {
+                        matchesAll = false;
+                        break;
+                    }
+
+                    String key = keyValue[0].trim().toLowerCase();
+                    String value = keyValue[1].trim().toLowerCase();
+
+                    switch (key) {
+                        case "contentid":
+                            if (!singleItem.getId().toLowerCase().equals(value)) matchesAll = false;
+                            break;
+                        case "contenttitle":
+                            if (!singleItem.getTitle().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        case "contentdescription":
+                            if (!singleItem.getDescription().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        case "contentplatform":
+                            if (!singleItem.getPlatform().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        case "contentsavedate":
+                            if (!singleItem.getSave_date().toLowerCase().contains(value)) matchesAll = false;
+                            break;
+                        default:
+                            matchesAll = false;
+                            break;
+                    }
+
+                    if (!matchesAll) break;
+                }
+
+                if (matchesAll) {
+                    feedFilteredList.add(singleItem);
+                }
+            }
+
+        } else {
+            for (ContentModel singleItem : contentModels) {
+                if (singleItem.getTitle().toLowerCase().contains(newText.toLowerCase()) ||
+                        singleItem.getDescription().toLowerCase().contains(newText.toLowerCase()) ||
+                        singleItem.getPlatform().toLowerCase().contains(newText.toLowerCase()) ||
+                        singleItem.getSave_date().toLowerCase().contains(newText.toLowerCase())) {
+                    feedFilteredList.add(singleItem);
+                }
             }
         }
+
         adapter.feedFilterList(feedFilteredList);
     }
+
 
     @Override
     public void onFeedItemClick(int position) {

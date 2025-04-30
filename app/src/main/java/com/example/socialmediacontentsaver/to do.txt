@@ -1,2 +1,3 @@
 Tagi zeby bylo latwiej cos znalezc
+advanced query system
 no i kwestie wizualne, bo to plain xml, bez stylizacji
