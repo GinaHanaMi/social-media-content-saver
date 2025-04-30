@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
-import com.example.socialmediacontentsaver.models.ContentModel;
 import com.example.socialmediacontentsaver.models.FolderModel;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class FoldersActivityRecyclerViewAdapter extends RecyclerView.Adapter<FoldersActivityRecyclerViewAdapter.MyViewHolder>{
+    private final FolderRecyclerViewInterface folderRecyclerViewInterface;
     Context context;
     ArrayList<FolderModel> mainFolderModels;
 
-    public FoldersActivityRecyclerViewAdapter(Context context, ArrayList<FolderModel> mainFolderModels) {
+    public FoldersActivityRecyclerViewAdapter(Context context, ArrayList<FolderModel> mainFolderModels, FolderRecyclerViewInterface folderRecyclerViewInterface) {
+        this.folderRecyclerViewInterface = folderRecyclerViewInterface;
         this.context = context;
         this.mainFolderModels = mainFolderModels;
     }
@@ -41,7 +42,7 @@ public class FoldersActivityRecyclerViewAdapter extends RecyclerView.Adapter<Fol
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.folder_recycler_view_row, parent, false);
 
-        return new FoldersActivityRecyclerViewAdapter.MyViewHolder(view);
+        return new FoldersActivityRecyclerViewAdapter.MyViewHolder(view, folderRecyclerViewInterface);
     }
 
     @Override
@@ -81,13 +82,26 @@ public class FoldersActivityRecyclerViewAdapter extends RecyclerView.Adapter<Fol
         ImageView folderThumbnailRecycleViewImageViewVar;
         TextView folderTitleRecyclerTextViewVar, folderDescriptionRecyclerTextViewVar, folderCreatedAtRecyclerTextViewVar;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, FolderRecyclerViewInterface folderRecyclerViewInterface) {
             super(itemView);
 
             folderThumbnailRecycleViewImageViewVar = itemView.findViewById(R.id.folderThumbnailRecycleViewImageView);
             folderTitleRecyclerTextViewVar = itemView.findViewById(R.id.folderTitleRecyclerTextView);
             folderDescriptionRecyclerTextViewVar = itemView.findViewById(R.id.folderDescriptionRecyclerTextView);
             folderCreatedAtRecyclerTextViewVar = itemView.findViewById(R.id.folderCreatedAtRecyclerTextView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (folderRecyclerViewInterface != null) {
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION) {
+                            folderRecyclerViewInterface.onFolderItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
