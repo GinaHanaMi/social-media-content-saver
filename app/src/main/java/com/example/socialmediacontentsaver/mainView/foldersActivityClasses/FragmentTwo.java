@@ -168,13 +168,13 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
                         case "folderid":
                             if (!singleItem.getId().toLowerCase().equals(value)) matchesAll = false;
                             break;
-                        case "foldertitle":
+                        case "title":
                             if (!singleItem.getTitle().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "folderdescription":
+                        case "description":
                             if (!singleItem.getDescription().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "foldercreatedat":
+                        case "created":
                             if (!singleItem.getCreated_at().toLowerCase().contains(value)) matchesAll = false;
                             break;
                         default:

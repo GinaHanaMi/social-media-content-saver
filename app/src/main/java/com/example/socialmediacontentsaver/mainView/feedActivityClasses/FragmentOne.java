@@ -150,16 +150,16 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                         case "contentid":
                             if (!singleItem.getId().toLowerCase().equals(value)) matchesAll = false;
                             break;
-                        case "contenttitle":
+                        case "title":
                             if (!singleItem.getTitle().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "contentdescription":
+                        case "description":
                             if (!singleItem.getDescription().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "contentplatform":
+                        case "platform":
                             if (!singleItem.getPlatform().toLowerCase().contains(value)) matchesAll = false;
                             break;
-                        case "contentsavedate":
+                        case "savedate":
                             if (!singleItem.getSave_date().toLowerCase().contains(value)) matchesAll = false;
                             break;
                         case "folderid":  // Adding folder filter
