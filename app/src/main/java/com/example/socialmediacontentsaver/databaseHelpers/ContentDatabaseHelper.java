@@ -53,4 +53,8 @@ public class ContentDatabaseHelper {
                 "ON f.id = fc.folder_id " +
                 "WHERE fc.content_id = ?", new String[]{String.valueOf(contentId)});
     }
+
+    public void deleteFolderAssociation(int contentId) {
+        db.delete(AppDatabaseHelper.FOLDER_CONTENT_TABLE, "content_id = ?", new String[]{String.valueOf(contentId)});
+    }
 }

@@ -293,6 +293,7 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
         });
 
         feedDialogDeleteContentButton.setOnClickListener(view -> {
+            contentDatabase.deleteFolderAssociation(Integer.parseInt(contentModels.get(position).getId()));
             contentDatabase.deleteContent(Integer.parseInt(contentModels.get(position).getId()));
             FeedPopulateLayoutWithContent();
             dialog.dismiss();
