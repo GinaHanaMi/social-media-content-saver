@@ -21,6 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MetadataFetcher {
 
@@ -355,8 +357,63 @@ public class MetadataFetcher {
                 platform = "Facebook";
 
                 return;
-            } else if (sharedText.contains("pinterest.com")) {
+            } else if (sharedText.contains("pinterest.com") || sharedText.contains("pin.it")) {
                 platform = "Pinterest";
+
+                try {
+                    Pattern urlPattern = Pattern.compile("(https?://\\S+)");
+                    Matcher matcher = urlPattern.matcher(sharedText);
+                    String cleanedUrl = sharedText;
+                    if (matcher.find()) {
+                        cleanedUrl = matcher.group(1);
+                    }
+
+                    // Step 2: Resolve final redirect
+                    String resolvedUrl = resolveFinalUrl(cleanedUrl);
+
+                    // Step 3: Fetch actual metadata
+                    Document doc = Jsoup.connect(resolvedUrl)
+                            .userAgent("Mozilla/5.0") // Important for Pinterest
+                            .get();
+
+                    resultTitle = doc.select("meta[property=og:title]").attr("content");
+                    resultDescription = doc.select("meta[property=og:description]").attr("content");
+                    platform = doc.select("meta[property=og:site_name]").attr("content");
+                    resultImageUrl = doc.select("meta[property=og:image]").attr("content");
+
+                    if (resultTitle == null || resultTitle.isEmpty()) {
+                        resultTitle = "Pinterest Pin";
+                    }
+
+                    if (resultDescription == null || resultDescription.isEmpty()) {
+                        resultDescription = "";
+                    }
+
+                    if (platform == null || platform.isEmpty()) {
+                        platform = "Pinterest";
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    resultTitle = "Failed to fetch Pinterest title";
+                    resultDescription = "";
+                    platform = "Pinterest";
+                    resultImageUrl = null;
+                }
+
+                String savedPath = null;
+                if (resultImageUrl != null) {
+                    savedPath = downloadAndSaveImage(context, resultImageUrl);
+                }
+
+                String finalResultTitle = resultTitle;
+                String finalResultDescription = resultDescription;
+                String finalPlatform = platform;
+                String finalSavedPath = savedPath;
+
+                handler.post(() -> {
+                    listener.onMetadataFetched(finalResultTitle, finalResultDescription, finalSavedPath, finalPlatform);
+                });
 
                 return;
             } else {

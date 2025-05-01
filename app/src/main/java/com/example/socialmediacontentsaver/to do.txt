@@ -14,4 +14,3 @@ What to make work:
 
 Instagram (has og tags, but does not work)
 Facebook (no og)
-Pinterest (og:site_name only)
