@@ -1,6 +1,13 @@
 Give folders and content tags for easier search and another level of categorization
 Add content to folder from MainActivity Fragment
 Stylize UI Design
+limit the amount of data displayed in rows as they overflow :/
+some tiktok posts are not fetching
+when when app is open and thing added sometimes it does not show changes. Probably because it is not refreshed.
+So call onRestart and refresh everything
+SETTINGS! I don't know what settings yet. Maybe I will delete it?
+clear noodle code
+
 
 What platforms work:
 YouTube (scrape og - works)
@@ -8,9 +15,8 @@ LinkedIn (scrape og - works)
 Twitter (oembed - no thumbnail)
 Reddit (oembed - no thumbnail)
 TikTok (oembed - works)
+Instagram (scrape og - works)
 
 
 What to make work:
-
-Instagram (has og tags, but does not work)
 Facebook (no og)

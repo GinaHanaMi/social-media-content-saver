@@ -192,6 +192,59 @@ public class MetadataFetcher {
             } else if (sharedText.contains("instagram.com")) {
                 platform = "Instagram";
 
+                try {
+                    Document doc = Jsoup.connect(sharedText)
+                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                            .referrer("http://www.google.com")
+                            .get();
+
+                    // https://chatgpt.com/c/681381dc-ba50-800c-862a-1004833d0661
+                    resultTitle = doc.select("meta[property=og:title]").attr("content");
+                    resultDescription = doc.select("meta[property=og:description]").attr("content");
+                    platform = doc.select("meta[property=og:site_name]").attr("content");
+                    resultImageUrl = doc.select("meta[property=og:image]").attr("content");
+
+                    if (resultTitle == null || resultTitle.isEmpty()) {
+                        resultTitle = doc.title();
+                    }
+
+                    if (resultDescription == null || resultDescription.isEmpty()) {
+                        resultDescription = doc.title();
+                    }
+
+                    if (resultImageUrl == null || resultImageUrl.isEmpty()) {
+                        resultImageUrl = null;
+                    }
+
+                    if (platform == null || platform.isEmpty()) {
+                        platform = "Unknown";
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    resultTitle = "Failed to fetch title";
+                    resultDescription = "Failed to fetch description";
+                    platform = "Unknown";
+                    resultImageUrl = null;
+                }
+
+                String savedPath = null;
+                if (resultImageUrl != null) {
+                    savedPath = downloadAndSaveImage(context, resultImageUrl);
+                } else {
+                    // Use placeholder image from drawable
+                    savedPath = "android.resource://" + context.getPackageName() + "/" + R.drawable.ic_launcher_background;
+                }
+
+                String finalResultTitle = resultTitle;
+                String finalResultDescription = resultDescription;
+                String finalPlatform = platform;
+                String finalSavedPath = savedPath;
+
+                handler.post(() -> {
+                    listener.onMetadataFetched(finalResultTitle, finalResultDescription, finalSavedPath, finalPlatform);
+                });
+
                 return;
             } else if (sharedText.contains("twitter.com") || sharedText.contains("x.com")) {
                 platform = "Twitter";
