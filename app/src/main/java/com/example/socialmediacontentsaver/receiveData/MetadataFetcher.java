@@ -230,8 +230,61 @@ public class MetadataFetcher {
             } else if (sharedText.contains("tiktok.com")) {
                 platform = "TikTok";
 
+                resultDescription = "";  // Always empty as requested
+
+                try {
+                    // Build oEmbed URL
+                    String oEmbedUrl = "https://www.tiktok.com/oembed?url=" + sharedText;
+
+                    // Fetch oEmbed JSON
+                    URL url = new URL(oEmbedUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                    connection.connect();
+
+                    InputStream input = connection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder responseBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        responseBuilder.append(line);
+                    }
+                    reader.close();
+
+                    // Parse JSON
+                    JSONObject json = new JSONObject(responseBuilder.toString());
+
+                    resultTitle = json.optString("title", "");
+                    if (resultTitle.isEmpty()) {
+                        resultTitle = json.optString("author_name", "TikTok Creator");
+                    }
+
+                    resultImageUrl = json.optString("thumbnail_url", null);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    resultTitle = "Failed to fetch TikTok";
+                    resultImageUrl = null;
+                }
+
+                // Save thumbnail locally
+                String savedPath = null;
+                if (resultImageUrl != null) {
+                    savedPath = downloadAndSaveImage(context, resultImageUrl);
+                }
+
+                String finalResultTitle = resultTitle;
+                String finalResultDescription = resultDescription;
+                String finalPlatform = platform;
+                String finalSavedPath = savedPath;
+
+                handler.post(() -> {
+                    listener.onMetadataFetched(finalResultTitle, finalResultDescription, finalSavedPath, finalPlatform);
+                });
+
                 return;
-            } else if (sharedText.contains("reddit.com")) {
+            }
+            else if (sharedText.contains("reddit.com")) {
                 platform = "Reddit";
 
                 return;
