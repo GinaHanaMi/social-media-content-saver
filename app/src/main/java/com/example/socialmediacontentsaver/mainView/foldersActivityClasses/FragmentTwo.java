@@ -2,9 +2,11 @@ package com.example.socialmediacontentsaver.mainView.foldersActivityClasses;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -25,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.socialmediacontentsaver.R;
@@ -39,7 +40,11 @@ import com.example.socialmediacontentsaver.models.FolderModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface {
     FolderDatabaseHelper mainFolderDatabase;
@@ -52,9 +57,9 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
     String selectedFolderThumbnailPath = null;
     private ActivityResultLauncher<Intent> folderImagePickerLauncher;
     private ImageButton editFolderImageButton;
-
-    private AlertDialog mainFoldersDialog; // Declare mainFoldersDialog
-    private AlertDialog folderOptionsDialog; // Declare folderOptionsDialog
+    private AlertDialog folderOptionsDialog;
+    private ImageButton currentFolderThumbnailButton;
+    String thumbnail_path = "";
 
     @Override
     public void onResume() {
@@ -103,6 +108,67 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FoldersPopulateLayoutWithFolders();
+
+        Button folderAddNewFolderButton = view.findViewById(R.id.folderAddNewFolderButton);
+        folderAddNewFolderButton.setOnClickListener(v -> {
+            // Set current date
+            String pattern = "dd/MM/yyyy";
+            @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat(pattern);
+            Date currentTime = Calendar.getInstance().getTime();
+            String currentTimeStringify = df.format(currentTime);
+
+            // Reset selected path before opening dialog
+            selectedFolderThumbnailPath = null;
+
+            View editDialogView = getLayoutInflater().inflate(R.layout.edit_folder_dialog, null);
+
+            editFolderImageButton = editDialogView.findViewById(R.id.editFolderImageButton);
+            EditText editFolderTitleEditText = editDialogView.findViewById(R.id.editFolderTitleEditText);
+            EditText editFolderDescriptionEditText = editDialogView.findViewById(R.id.editFolderDescriptionEditText);
+            Button editFolderSaveButton = editDialogView.findViewById(R.id.editFolderSaveButton);
+
+            // Optional: set placeholder image for visual preview
+            Glide.with(requireContext())
+                    .load(R.drawable.ic_launcher_foreground)
+                    .into(editFolderImageButton);
+
+            AlertDialog editFolderDialog = new AlertDialog.Builder(requireContext())
+                    .setView(editDialogView)
+                    .create();
+
+            editFolderDialog.show();
+
+            editFolderImageButton.setOnClickListener(view1 -> {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                folderImagePickerLauncher.launch(intent);
+            });
+
+            editFolderSaveButton.setOnClickListener(view12 -> {
+                String folderTitle = editFolderTitleEditText.getText().toString();
+
+                if (folderTitle.isEmpty() || selectedFolderThumbnailPath == null || selectedFolderThumbnailPath.isEmpty()) {
+                    if (folderTitle.isEmpty()) {
+                        editFolderTitleEditText.setError("Title cannot be empty!");
+                    }
+
+                    if (selectedFolderThumbnailPath == null || selectedFolderThumbnailPath.isEmpty()) {
+                        editFolderTitleEditText.setError("Thumbnail cannot be empty!");
+                    }
+                    return;
+                }
+                mainFolderDatabase.insertFolder(
+                        selectedFolderThumbnailPath,
+                        folderTitle,
+                        editFolderDescriptionEditText.getText().toString(),
+                        currentTimeStringify
+                );
+
+                FoldersPopulateLayoutWithFolders();
+                editFolderDialog.dismiss();
+            });
+        });
     }
 
     public void FoldersPopulateLayoutWithFolders() {
@@ -227,7 +293,6 @@ public class FragmentTwo extends Fragment implements FolderRecyclerViewInterface
 
             // Dismiss both dialogs
             if (folderOptionsDialog != null) folderOptionsDialog.dismiss();
-            if (mainFoldersDialog != null) mainFoldersDialog.dismiss();
         });
 
 
