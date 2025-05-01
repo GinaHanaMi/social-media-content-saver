@@ -1,3 +1,19 @@
-Tagi zeby bylo latwiej cos znalezc
-dodawanie contentu do folderu na nowo
-no i kwestie wizualne, bo to plain xml, bez stylizacji
+Give folders and content tags for easier search and another level of categorization
+Add content to folder from MainActivity Fragment
+Stylize UI Design
+Add other platforms!
+
+What platforms work:
+YouTube (scrape og)
+LinkedIn (scrape og)
+
+
+What to make work:
+
+Instagram (has og tags, but does not work)
+Twitter (has og tags, but does not work)
+TikTok (has og tags, but does not work)
+
+Reddit (no og tags)
+Facebook (no og)
+Pinterest (og:site_name only)

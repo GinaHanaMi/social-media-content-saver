@@ -60,7 +60,7 @@ public class MetadataFetcher {
 
             try {
                 Document doc = Jsoup.connect(sharedText).get();
-
+                // https://chatgpt.com/c/681381dc-ba50-800c-862a-1004833d0661
                 resultTitle = doc.select("meta[property=og:title]").attr("content");
                 resultDescription = doc.select("meta[property=og:description]").attr("content");
                 platform = doc.select("meta[property=og:site_name]").attr("content");
