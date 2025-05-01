@@ -3,16 +3,15 @@ Add content to folder from MainActivity Fragment
 Stylize UI Design
 
 What platforms work:
-YouTube (scrape og)
-LinkedIn (scrape og)
-Twitter (oembed)
+YouTube (scrape og - works)
+LinkedIn (scrape og - works)
+Twitter (oembed - no thumbnail)
+Reddit (oembed - no thumbnail)
+TikTok (oembed - works)
 
 
 What to make work:
 
 Instagram (has og tags, but does not work)
-TikTok (has og tags, but does not work)
-
-Reddit (no og tags)
 Facebook (no og)
 Pinterest (og:site_name only)

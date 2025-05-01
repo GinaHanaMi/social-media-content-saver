@@ -24,6 +24,28 @@ import java.util.concurrent.Executors;
 
 public class MetadataFetcher {
 
+    private static String resolveFinalUrl(String shortUrl) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(shortUrl).openConnection();
+            con.setInstanceFollowRedirects(false); // We'll handle redirects manually
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+            con.connect();
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                    responseCode == HttpURLConnection.HTTP_MOVED_TEMP ||
+                    responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+                String redirectedUrl = con.getHeaderField("Location");
+                if (redirectedUrl != null) {
+                    return redirectedUrl;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return shortUrl; // fallback to original
+    }
+
     public static String downloadAndSaveImage(Context context, String imageUrl) {
         try {
             URL url = new URL(imageUrl);
@@ -286,6 +308,47 @@ public class MetadataFetcher {
             }
             else if (sharedText.contains("reddit.com")) {
                 platform = "Reddit";
+
+                resultDescription = "";  // Always empty as requested
+
+                try {
+                    // Build oEmbed URL
+                    String resolvedUrl = resolveFinalUrl(sharedText);
+                    String oEmbedUrl = "https://www.reddit.com/oembed?url=" + resolvedUrl;
+
+                    // Fetch oEmbed JSON
+                    URL url = new URL(oEmbedUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                    connection.connect();
+
+                    InputStream input = connection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder responseBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        responseBuilder.append(line);
+                    }
+                    reader.close();
+
+                    // Parse JSON
+                    JSONObject json = new JSONObject(responseBuilder.toString());
+
+                    resultTitle = json.optString("title", "Reddit Post");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    resultTitle = "Failed to fetch Reddit post";
+                }
+
+                final String finalResultTitle = resultTitle;
+                final String finalResultDescription = resultDescription;
+                final String finalPlatform = platform;
+                final String finalSavedPath = "android.resource://" + context.getPackageName() + "/" + R.drawable.ic_launcher_background;
+
+                handler.post(() -> {
+                    listener.onMetadataFetched(finalResultTitle, finalResultDescription, finalSavedPath, finalPlatform);
+                });
 
                 return;
             } else if (sharedText.contains("facebook.com")) {
