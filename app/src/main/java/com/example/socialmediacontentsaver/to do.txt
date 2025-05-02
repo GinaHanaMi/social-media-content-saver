@@ -1,7 +1,8 @@
 Give folders and content tags for easier search and another level of categorization
 Add content to folder from MainActivity Fragment
 Stylize UI Design
-
+when delete content from folders the dilog should be closed and the feed refreshed - on tab change? Maybe be too much resou
+orce consuming, so maybe direct call?
 
 
 What platforms work:
