@@ -306,7 +306,6 @@ public class MetadataFetcher {
                 return;
             } else if (sharedText.contains("tiktok.com")) {
                 platform = "TikTok";
-
                 resultDescription = "";  // Always empty as requested
 
                 try {
@@ -345,7 +344,7 @@ public class MetadataFetcher {
                 }
 
                 // Save thumbnail locally
-                String savedPath = null;
+                String savedPath = "android.resource://" + context.getPackageName() + "/" + R.drawable.ic_launcher_background;;
                 if (resultImageUrl != null) {
                     savedPath = downloadAndSaveImage(context, resultImageUrl);
                 }
