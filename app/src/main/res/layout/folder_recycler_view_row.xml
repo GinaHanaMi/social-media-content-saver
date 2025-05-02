@@ -15,51 +15,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/folderThumbnailRecycleViewImageView"
                 android:layout_width="160dp"
                 android:layout_height="90dp"
                 android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/folderTitleRecyclerTextView"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_goneMarginRight="10dp"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <TextView
-                android:id="@+id/folderTitleRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TITLE"
-                app:layout_constraintLeft_toRightOf="@id/folderThumbnailRecycleViewImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/folderDescriptionRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION"
-                app:layout_constraintBottom_toTopOf="@id/folderCreatedAtRecyclerTextView"
-                app:layout_constraintLeft_toRightOf="@id/folderThumbnailRecycleViewImageView"
-                app:layout_constraintTop_toBottomOf="@id/folderTitleRecyclerTextView"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                />
+                    <TextView
+                        android:id="@+id/folderTitleRecyclerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TITLE"
+                        android:maxLines="1"
+                        />
 
-            <TextView
-                android:id="@+id/folderCreatedAtRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CREATE AT"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/folderThumbnailRecycleViewImageView" />
+                    <TextView
+                        android:id="@+id/folderDescriptionRecyclerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DESCRIPTION"
+                        android:minLines="2"
+                        android:maxLines="2"
+                        />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/folderCreatedAtRecyclerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:maxLength="12"
+                        android:text="CREATE AT" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,7 @@
 Give folders and content tags for easier search and another level of categorization
 Add content to folder from MainActivity Fragment
 Stylize UI Design
-limit the amount of data displayed in rows as they overflow :/
-SETTINGS! I don't know what settings yet. Maybe I will delete it?
-clear noodle code
+
 
 
 What platforms work:
@@ -23,3 +21,7 @@ Facebook (no og)
 when when app is open and thing added sometimes it does not show changes. Probably because it is not refreshed.
 So call onRestart and refresh everything
 Didn't occur
+
+
+SETTINGS! I don't know what settings yet. Maybe I will delete it?
+clear noodle code

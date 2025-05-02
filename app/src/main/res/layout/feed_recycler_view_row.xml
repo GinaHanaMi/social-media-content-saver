@@ -15,60 +15,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/feedThumbnailRecycleViewImageView"
                 android:layout_width="160dp"
                 android:layout_height="90dp"
                 android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/feedTitleRecyclerTextView"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_goneMarginRight="10dp"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <TextView
-                android:id="@+id/feedTitleRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TITLE"
-                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/feedDescriptionRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION"
-                app:layout_constraintBottom_toTopOf="@id/feedSaveDateRecyclerTextView"
-                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewImageView"
-                app:layout_constraintTop_toBottomOf="@id/feedTitleRecyclerTextView"
-                />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/feedSaveDateRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SAVE_DATE"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/feedThumbnailRecycleViewImageView"
-                />
+                    <TextView
+                        android:id="@+id/feedTitleRecyclerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TITLE"
+                        android:maxLines="1"
+                        />
 
-            <TextView
-                android:id="@+id/feedPlatformRecyclerTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PLATFORM"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/feedSaveDateRecyclerTextView" />
+                    <TextView
+                        android:id="@+id/feedDescriptionRecyclerTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DESCRIPTION"
+                        android:minLines="2"
+                        android:maxLines="2"
+                        />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        >
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/feedSaveDateRecyclerTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:maxLength="12"
+                            android:layout_weight="1"
+                            android:text="SAVE_DATE" />
+
+                        <TextView
+                            android:id="@+id/feedPlatformRecyclerTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:maxLength="12"
+                            android:layout_weight="1"
+                            android:text="PLATFORM" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
