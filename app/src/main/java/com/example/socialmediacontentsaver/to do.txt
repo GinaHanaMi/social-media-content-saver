@@ -1,8 +1,14 @@
 Give folders and content tags for easier search and another level of categorization
 Add content to folder from MainActivity Fragment
 Stylize UI Design
-when delete content from folders the dilog should be closed and the feed refreshed - on tab change? Maybe be too much resou
-orce consuming, so maybe direct call?
+
+For settings:
+dark mode
+data saving - convert images to smaller ones before saving and also fetch images in lower res
+option to download image data only when wifi connected
+option to download image when user connects to wifi after adding content
+statistics of how much user used the app - time, saved content, saved folders, deleted, edited
+
 
 
 What platforms work:
