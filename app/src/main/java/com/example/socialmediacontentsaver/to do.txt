@@ -22,13 +22,3 @@ Instagram (scrape og - works)
 
 What to make work:
 Facebook (no og)
-
-
-
-when when app is open and thing added sometimes it does not show changes. Probably because it is not refreshed.
-So call onRestart and refresh everything
-Didn't occur
-
-
-SETTINGS! I don't know what settings yet. Maybe I will delete it?
-clear noodle code
