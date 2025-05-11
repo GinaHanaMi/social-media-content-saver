@@ -100,6 +100,13 @@ public class FragmentOne extends Fragment implements FeedRecyclerViewInterface {
                 feedSearchView.requestFocus();
             }
         });
+
+        sharedViewModel.getRefreshFeed().observe(getViewLifecycleOwner(), shouldRefresh -> {
+            if (shouldRefresh != null && shouldRefresh) {
+                FeedPopulateLayoutWithContent();
+            }
+        });
+
     }
 
     public void FeedPopulateLayoutWithContent() {

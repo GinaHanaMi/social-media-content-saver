@@ -46,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
             public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+                sharedViewModel.triggerRefreshFeed();
+            }
         });
 
         // Sync tab selection with page changes
